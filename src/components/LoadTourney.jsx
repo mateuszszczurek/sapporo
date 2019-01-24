@@ -11,7 +11,7 @@ class LoadTurney extends React.Component {
             <Row>
                 <Col sm={6} smOffset={3}>
                     <form style={formStyle}>
-                        <h1>Wczytaj istniejący turniej</h1>
+                        <h2>Wczytaj istniejący turniej</h2>
                         <FormGroup controlId="formBasicText">
                             <FieldGroup
                                 id="formControlsFile"

@@ -23,8 +23,3 @@ export default () =>
             </Col>
         </Row>
     </Grid>
-
-const borderSpace = {
-    margin: '20px',
-    padding: '20px'
-};

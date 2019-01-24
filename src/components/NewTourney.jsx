@@ -33,7 +33,7 @@ class NewToruney extends React.Component {
                             alert('Nie-dupa');
                             e.preventDefault()
                         }}>
-                        <h1>Stwórz nowy turniej</h1>
+                        <h2>Stwórz nowy turniej</h2>
                         <FormGroup
                             controlId='formBasicText'
                             validationState={this.getValidationState()}
