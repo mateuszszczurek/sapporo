@@ -4,8 +4,9 @@ import './App.css'
 
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 
-import NewTourney from './NewTourney'
-import SelectionPage from "./SelectionPage";
+import NewTourney from './components/NewTourney'
+import LoadTurney from "./components/LoadTourney";
+import SelectionPage from "./components/SelectionPage";
 
 class App extends Component {
     render() {
@@ -13,7 +14,7 @@ class App extends Component {
             <div>
                 <Switch>
                     <Route path='/tourney/new' component={NewTourney}/>
-                    <Route path='/tourney/load' component={NewTourney}/>
+                    <Route path='/tourney/load' component={LoadTurney}/>
                     <Route path='/' component={SelectionPage}/>
                 </Switch>
             </div>

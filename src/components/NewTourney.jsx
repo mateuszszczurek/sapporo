@@ -27,13 +27,13 @@ class NewToruney extends React.Component {
         return <Grid>
             <Row>
                 <Col sm={6} smOffset={3}>
-                    <h1>Stwórz nowy turniej</h1>
                     <form
-                        style={formBorder}
+                        style={formStyle}
                         onSubmit={e => {
-                            alert('Dupa');
+                            alert('Nie-dupa');
                             e.preventDefault()
                         }}>
+                        <h1>Stwórz nowy turniej</h1>
                         <FormGroup
                             controlId='formBasicText'
                             validationState={this.getValidationState()}
@@ -55,10 +55,10 @@ class NewToruney extends React.Component {
     }
 }
 
-const formBorder = {
+const formStyle = {
     border: 'thin black solid',
     margin: '20px',
     padding: '20px'
-}
+};
 
 export default NewToruney;
