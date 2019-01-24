@@ -1,4 +1,5 @@
 # Sapporo Voleyball Toruney App
+- [ ] commonize layout and logo for all pages?
 - [ ] check for uniqueness - cannot create another toruney with the same name?
 - [ ] prettify Submit button handler, need to prevent default, so that question mark is not added to URL
 - [ ] border around forms

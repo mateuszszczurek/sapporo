@@ -1,13 +1,14 @@
-import {Button, ButtonGroup, Col, Grid, PageHeader, Row} from "react-bootstrap";
+import {Button, ButtonGroup, Col, Grid, Row} from "react-bootstrap";
 import * as React from "react";
 import {LinkContainer} from "react-router-bootstrap";
+import Logo from "./Logo";
 
 
 export default () =>
     <Grid>
         <Row>
             <Col sm={8} smOffset={2}>
-                <PageHeader>Volleyball Tournament App</PageHeader>
+                <Logo/>
                 <ButtonGroup justified>
                     <LinkContainer to='/tourney/new'>
                         <Button bsStyle="primary">

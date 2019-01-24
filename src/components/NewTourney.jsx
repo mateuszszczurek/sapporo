@@ -1,5 +1,6 @@
 import * as React from "react";
 import {Button, Col, ControlLabel, FormControl, FormGroup, Grid, Row} from "react-bootstrap";
+import Logo from "./Logo";
 
 class NewToruney extends React.Component {
 
@@ -26,7 +27,8 @@ class NewToruney extends React.Component {
     render() {
         return <Grid>
             <Row>
-                <Col sm={6} smOffset={3}>
+                <Col sm={8} smOffset={2}>
+                    <Logo/>
                     <form
                         style={formStyle}
                         onSubmit={e => {
@@ -57,7 +59,6 @@ class NewToruney extends React.Component {
 
 const formStyle = {
     border: 'thin black solid',
-    margin: '20px',
     padding: '20px'
 };
 
