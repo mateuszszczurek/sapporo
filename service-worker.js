@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/mateuszszczurek/sapporo/precache-manifest.73c049ffa01036a5a944adb0ef36d656.js"
+  "/sapporo/precache-manifest.1453d75363ef89c6202b38018f56a57f.js"
 );
 
 workbox.clientsClaim();
@@ -28,7 +28,7 @@ self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerNavigationRoute("/mateuszszczurek/sapporo/index.html", {
+workbox.routing.registerNavigationRoute("/sapporo/index.html", {
   
   blacklist: [/^\/_/,/\/[^\/]+\.[^\/]+$/],
 });
