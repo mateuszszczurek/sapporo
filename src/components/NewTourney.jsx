@@ -1,6 +1,7 @@
+import PropTypes from 'prop-types';
+
 import * as React from "react";
-import {Button, Col, ControlLabel, FormControl, FormGroup, Grid, Row} from "react-bootstrap";
-import Logo from "./Logo";
+import {Button, ControlLabel, FormControl, FormGroup} from "react-bootstrap";
 
 class NewToruney extends React.Component {
 
@@ -8,10 +9,12 @@ class NewToruney extends React.Component {
         super(props, context);
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleTourneyCreation = this.handleTourneyCreation.bind(this);
 
         this.state = {
             value: ''
         };
+
     }
 
     getValidationState() {
@@ -24,42 +27,43 @@ class NewToruney extends React.Component {
         this.setState({value: e.target.value});
     }
 
+    handleTourneyCreation() {
+        return e => {
+            e.preventDefault();
+            this.props.createNewTourney(this.state.value);
+        }
+    }
+
     render() {
-        return <Grid>
-            <Row>
-                <Col sm={8} smOffset={2}>
-                    <Logo/>
-                    <form
-                        style={formStyle}
-                        onSubmit={e => {
-                            alert('Nie-dupa');
-                            e.preventDefault()
-                        }}>
-                        <h2>Stwórz nowy turniej</h2>
-                        <FormGroup
-                            controlId='formBasicText'
-                            validationState={this.getValidationState()}
-                        >
-                            <ControlLabel>Podaj nazwę turnieju</ControlLabel>
-                            <FormControl
-                                type="text"
-                                value={this.state.value}
-                                placeholder="Małopolski turniej siatkówki amatorskiej "
-                                onChange={this.handleChange}
-                            />
-                            <FormControl.Feedback/>
-                        </FormGroup>
-                        <Button type="submit">Stwórz</Button>
-                    </form>
-                </Col>
-            </Row>
-        </Grid>
+        return <form
+            style={formStyle}
+            onSubmit={this.handleTourneyCreation()}>
+            <h2>Stwórz nowy turniej</h2>
+            <FormGroup
+                controlId='formBasicText'
+                validationState={this.getValidationState()}
+            >
+                <ControlLabel>Podaj nazwę turnieju</ControlLabel>
+                <FormControl
+                    type="text"
+                    value={this.state.value}
+                    placeholder="Małopolski turniej siatkówki amatorskiej "
+                    onChange={this.handleChange}
+                />
+                <FormControl.Feedback/>
+            </FormGroup>
+            <Button type="submit">Stwórz</Button>
+        </form>
     }
 }
 
 const formStyle = {
     border: 'thin black solid',
     padding: '20px'
+};
+
+NewToruney.propTypes = {
+    createNewTourney : PropTypes.func
 };
 
 export default NewToruney;

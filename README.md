@@ -6,6 +6,8 @@
 - [ ] extract style
 - [ ] agree on sensible theme
 - [ ] check that each page is rendering (in test)
+- [ ] fix display name
+- [ ] up to 8 groups
 
 How to style react components: https://codeburst.io/4-four-ways-to-style-react-components-ac6f323da822<br/>
 Syntax: https://help.github.com/articles/basic-writing-and-formatting-syntax/<br/>
