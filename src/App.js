@@ -10,7 +10,8 @@ import SelectionPage from "./components/SelectionPage";
 
 import SingleColumnLayout from "./hoc/SingleColumnLayout";
 import NewTourney from "./components/NewTourney";
-import FourColumnLayout from "./components/Groups";
+import Groups from "./components/Groups";
+import TourneyState from "./components/TourneyState";
 
 class App extends Component {
 
@@ -20,6 +21,7 @@ class App extends Component {
         this.addGroup = this.addGroup.bind(this);
         this.pickTourneyName = this.pickTourneyName.bind(this);
         this.addTeam = this.addTeam.bind(this);
+        this.approveGroups = this.approveGroups.bind(this);
 
         this.state = {groups: [{groupLetter: "A", teams: []}]};
     }
@@ -47,6 +49,13 @@ class App extends Component {
         this.setState({groups: newGroups})
     }
 
+    approveGroups(history) {
+        return e => {
+
+            history.push('/tourney/state')
+        }
+    }
+
     pickTourneyName(toruneyName) {
         this.setState({tourneyName: toruneyName});
     }
@@ -71,12 +80,15 @@ class App extends Component {
                     <Route path='/tourney/load' component={SingleColumnLayout({Content: LoadTourney})}/>
                     <Route path='/tourney/groups'
                            render={props =>
-                               <FourColumnLayout addGroup={this.addGroup}
-                                                 tourneyName={this.state.tourneyName}
-                                                 groups={this.state.groups}
-                                                 teamAdded={this.addTeam}/>
+                               <Groups addGroup={this.addGroup}
+                                       tourneyName={this.state.tourneyName}
+                                       groups={this.state.groups}
+                                       teamAdded={this.addTeam}
+                                       approveGroups={this.approveGroups(history)}
+                               />
                            }
                     />
+                    <Route path='/tourney/state' component={TourneyState}/>
                     <Route path='/' component={SingleColumnLayout({Content: SelectionPage})}/>
                     <Redirect from='*' to='/'/>
                 </Switch>
@@ -88,7 +100,6 @@ class App extends Component {
 function byName(teamName) {
     return (it) => it.groupLetter === teamName;
 }
-
 
 const LayoutNewTourney = SingleColumnLayout({Content: NewTourney});
 

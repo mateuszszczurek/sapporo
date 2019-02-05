@@ -1,5 +1,5 @@
 import React from 'react'
-import {Col, Grid, Row} from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
 import Logo from "../components/Logo";
 
 function SingleColumnLayout(components) {
@@ -9,14 +9,18 @@ function SingleColumnLayout(components) {
     class Component extends React.Component {
 
         render() {
-            return <Grid>
+            return <Container>
                 <Row>
-                    <Col sm={8} smOffset={2}>
+                    <Col md={{span: 8, offset: 2}}>
                         <Logo/>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md={{span: 8, offset: 2}}>
                         <Content {...this.props}/>
                     </Col>
                 </Row>
-            </Grid>
+            </Container>
         }
     }
 

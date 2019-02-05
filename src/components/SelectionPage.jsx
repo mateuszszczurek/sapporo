@@ -3,14 +3,14 @@ import * as React from "react";
 import {LinkContainer} from "react-router-bootstrap";
 
 
-export default () => <ButtonGroup justified>
+export default () => <ButtonGroup className='d-flex'>
     <LinkContainer to='/tourney/new'>
-        <Button bsStyle="primary">
+        <Button variant="primary">
             Swtórz nowy turniej
         </Button>
     </LinkContainer>
     <LinkContainer to='/tourney/load'>
-        <Button bsStyle="primary">
+        <Button variant="primary">
             Wczytaj turniej
         </Button>
     </LinkContainer>

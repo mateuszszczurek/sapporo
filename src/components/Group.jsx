@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import * as React from "react";
-import {Button, Form, FormControl, FormGroup, Glyphicon} from "react-bootstrap";
+import {Button, Form, FormControl, FormGroup} from "react-bootstrap";
 
 import '../css/button.css';
-
-const spaceBetweenFormInputs = {marginBottom: '10px'};
+import {FaPlus} from "react-icons/fa/index";
 
 class Group extends React.Component {
 
@@ -25,7 +24,7 @@ class Group extends React.Component {
 
     teamAdded() {
         const newTeamName = this.state.newTeamName;
-        if(!newTeamName || newTeamName.length === 0) {
+        if(!newTeamName || newTeamName.trim().length === 0) {
             // this.setState({teamNameWarning: 'Nazwa drużyny nie może być pusta!'})
             // TODO add sensible message
             // TODO only unique team names!
@@ -53,14 +52,14 @@ class Group extends React.Component {
     addTeam() {
         return <div>
             <FormControl value={this.state.newTeamName}
-                         style={spaceBetweenFormInputs}
+                         className='mb-2'
                          key='newItem'
                          onChange={this.newTeamNameChange}
                          onKeyPress={this.newTeamOnEnter}
             />
-            <Button onClick={this.teamAdded}>
-                <Glyphicon glyph='plus'/>
-                <span style={spaceBetweenFormInputs}>Dodaj drużynę</span>
+            <Button onClick={this.teamAdded} >
+                <FaPlus  />
+                <span>Dodaj drużynę</span>
             </Button>
         </div>
     }

@@ -1,19 +1,19 @@
 import PropTypes from 'prop-types';
 
 import React from 'react'
-import {Col, Grid, Row} from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
 import Logo from "./Logo";
 import Group from "./Group";
 import Button from "react-bootstrap/es/Button";
-import Glyphicon from "react-bootstrap/es/Glyphicon";
+import {FaPlus} from "react-icons/fa/index";
 
 // TODO extract this css (is copied from other file)
 // TODO bigger space between plus and text
-// TODO try to bettern align 'dodaj grupę' button
-const spaceBetweenFormInputs = {marginBottom: '10px'};
+// TODO try to better align 'dodaj grupę' button
+// TODO check that there is at least one group with at least two teams
 
-function fourGroups(groups, teamAdded, from = 0, to = 4) {
-    return groups.slice(from, to).map(group =>
+function fourGroups(groups, teamAdded) {
+    return groups.map(group =>
         <Col key={group.groupLetter} sm={3}>
             <Group
                 groupLetter={group.groupLetter}
@@ -24,38 +24,51 @@ function fourGroups(groups, teamAdded, from = 0, to = 4) {
 
 class Groups extends React.Component {
 
+    constructor(props) {
+        super(props);
+
+        this.approveGroups = this.approveGroups.bind(this);
+    }
+
+    approveGroups() {
+        this.props.approveGroups();
+    }
+
     render() {
 
-        const {groups, teamAdded} = this.props;
-
-        console.log(groups);
-
+        const {groups, teamAdded, tourneyName} = this.props;
 
         const amountOfGroups = groups.length;
-        return <Grid>
+        return <Container>
             <Row>
-                <Col sm={8} smOffset={2}>
+                <Col md={{span: 8, offset: 2}}>
                     <Logo/>
                 </Col>
             </Row>
             <Row>
-                {fourGroups(groups, teamAdded)}
-                {amountOfGroups < 4 && addGroup(this.props.addGroup)}
+                <Col md={{span: 8}}>
+                    <h3 className='pb-3'>Turniej "{tourneyName}"</h3>
+                </Col>
             </Row>
             <Row>
-                {fourGroups(groups, teamAdded, 4, 8)}
-                {(amountOfGroups >= 4 && amountOfGroups < 8) && addGroup(this.props.addGroup)}
+                {fourGroups(groups, teamAdded)}
+                {(amountOfGroups < 8) && addGroup(this.props.addGroup)}
             </Row>
-        </Grid>
+            <Row>
+                <Col md={3}>
+                    <Button block onClick={this.approveGroups}>Zatwierdź grupy</Button>
+                </Col>
+            </Row>
+        </Container>
     }
 
 }
 
 function addGroup(groupAdded) {
     return <Col sm={3}>
-        <Button style={{marginTop: '20px'}} onClick={groupAdded}>
-            <Glyphicon glyph='plus'/>
-            <span style={spaceBetweenFormInputs}>Dodaj grupę</span>
+        <Button className='mb-3' onClick={groupAdded}>
+            <FaPlus/>
+            <span>Dodaj grupę</span>
         </Button>
     </Col>
 
@@ -64,13 +77,15 @@ function addGroup(groupAdded) {
 Groups.propTypes = {
     groups: PropTypes.array,
     addGroup: PropTypes.func,
-    tourneyName: PropTypes.string
+    tourneyName: PropTypes.string,
+    approveGroups: PropTypes.func
 };
 
 Group.defaultProps = {
     tourneyName: 'Turniej',
     groups: [],
-    addGroup: () => null
+    addGroup: () => null,
+    approveGroups: () => null,
 };
 
 export default Groups;

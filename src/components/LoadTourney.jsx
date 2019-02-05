@@ -1,19 +1,19 @@
 import * as React from "react";
-import {ControlLabel, PageHeader, FormControl, FormGroup} from "react-bootstrap";
+import {FormControl, Form} from "react-bootstrap";
 
 class LoadTurney extends React.Component {
 
     render() {
         return <form style={formStyle}>
-            <PageHeader>Wczytaj istniejący turniej</PageHeader>
-            <FormGroup controlId="formBasicText">
+            <h2 className='border-bottom mb-3'>Wczytaj istniejący turniej</h2>
+            <Form.Group controlId="formBasicText">
                 <FieldGroup
                     id="formControlsFile"
                     type="file"
                     label="Wybierz plik z zapisanym turniejem"
                 />
 
-            </FormGroup>
+            </Form.Group>
         </form>
     }
 }
@@ -26,10 +26,10 @@ const formStyle = {
 
 function FieldGroup({id, label, ...props}) {
     return (
-        <FormGroup controlId={id}>
-            <ControlLabel>{label}</ControlLabel>
+        <Form.Group controlId={id}>
+            <Form.Label>{label}</Form.Label>
             <FormControl {...props} />
-        </FormGroup>
+        </Form.Group>
     );
 }
 

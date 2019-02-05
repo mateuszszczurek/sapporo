@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
 import * as React from "react";
-import {Button, ControlLabel, FormControl, FormGroup} from "react-bootstrap";
+import {Button, Form} from "react-bootstrap";
 
 class NewToruney extends React.Component {
 
@@ -17,12 +17,6 @@ class NewToruney extends React.Component {
 
     }
 
-    getValidationState() {
-        const length = this.state.value.length;
-        if (length > 0) return 'success';
-        return null;
-    }
-
     handleChange(e) {
         this.setState({value: e.target.value});
     }
@@ -30,7 +24,11 @@ class NewToruney extends React.Component {
     handleTourneyCreation() {
         return e => {
             e.preventDefault();
-            this.props.createNewTourney(this.state.value);
+            if(!this.state.value || !this.state.value.trim()){
+                //TODO make it common util for checking empty string and preventing form action (same as for group addition)
+            } else {
+                this.props.createNewTourney(this.state.value);
+            }
         }
     }
 
@@ -39,19 +37,15 @@ class NewToruney extends React.Component {
             style={formStyle}
             onSubmit={this.handleTourneyCreation()}>
             <h2>Stwórz nowy turniej</h2>
-            <FormGroup
-                controlId='formBasicText'
-                validationState={this.getValidationState()}
-            >
-                <ControlLabel>Podaj nazwę turnieju</ControlLabel>
-                <FormControl
+            <Form.Group controlId='formBasicText'>
+                <Form.Label>Podaj nazwę turniej</Form.Label>
+                <Form.Control
                     type="text"
                     value={this.state.value}
                     placeholder="Małopolski turniej siatkówki amatorskiej "
                     onChange={this.handleChange}
                 />
-                <FormControl.Feedback/>
-            </FormGroup>
+            </Form.Group>
             <Button type="submit">Stwórz</Button>
         </form>
     }
