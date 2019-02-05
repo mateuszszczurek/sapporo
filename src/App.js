@@ -88,7 +88,8 @@ class App extends Component {
                                />
                            }
                     />
-                    <Route path='/tourney/state' component={TourneyState}/>
+                    <Route path='/tourney/state' render={props=>
+                        <LayoutTourneyState groups={this.state.groups}/>}/>
                     <Route path='/' component={SingleColumnLayout({Content: SelectionPage})}/>
                     <Redirect from='*' to='/'/>
                 </Switch>
@@ -102,5 +103,6 @@ function byName(teamName) {
 }
 
 const LayoutNewTourney = SingleColumnLayout({Content: NewTourney});
+const LayoutTourneyState = SingleColumnLayout({Content: TourneyState}, 12, 0);
 
 export default App;
