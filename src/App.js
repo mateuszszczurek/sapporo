@@ -7,10 +7,10 @@ import history from './helpers/history';
 
 import LoadTourney from "./components/LoadTourney";
 import SelectionPage from "./components/SelectionPage";
-import Groups from "./components/Groups";
 
-import Layout from "./hoc/Layout";
+import SingleColumnLayout from "./hoc/SingleColumnLayout";
 import NewTourney from "./components/NewTourney";
+import FourColumnLayout from "./components/Groups";
 
 class App extends Component {
 
@@ -18,38 +18,66 @@ class App extends Component {
         super(props);
 
         this.addGroup = this.addGroup.bind(this);
+        this.pickTourneyName = this.pickTourneyName.bind(this);
+        this.addTeam = this.addTeam.bind(this);
 
-        this.state = {};
+        this.state = {groups: [{groupLetter: "A", teams: []}]};
     }
 
-    addGroup(newGroup) {
-        const groups = this.state.groups ?  [...this.state.groups, newGroup] : [newGroup];
+    addGroup() {
+        let lastGroup = this.state.groups.map(it => it.groupLetter).slice().pop();
+        let newGroupLetter = String.fromCharCode(lastGroup.charCodeAt(0) + 1);
+        const groups = [...this.state.groups, {groupLetter: newGroupLetter, teams: []}];
         this.setState({groups: groups})
     }
 
-    addGroupAndRedirect(history) {
-        return (newGroup) => {
-            this.addGroup(newGroup);
+    addTeam(groupName, teamName) {
+        const group = this.state.groups.find(byName(groupName));
+
+        const newTeams = group.teams.slice();
+        newTeams.push(teamName);
+        const groupWithAddedTeam = {...group, teams: newTeams};
+
+        const newGroups = this.state.groups.slice();
+
+        const toReplace = newGroups.findIndex(byName(groupName));
+
+        newGroups[toReplace] = groupWithAddedTeam;
+
+        this.setState({groups: newGroups})
+    }
+
+    pickTourneyName(toruneyName) {
+        this.setState({tourneyName: toruneyName});
+    }
+
+    createTourneyAndRedirect(history) {
+        return (tourneyName) => {
+            this.pickTourneyName(tourneyName);
             history.push('/tourney/groups')
         }
     }
 
     render() {
+
         return <Router history={history}>
             <div>
                 <Switch>
                     <Route path='/tourney/new'
                            render={props =>
-                               <LayoutNewTourney createNewTourney={this.addGroupAndRedirect(history)}/>
+                               <LayoutNewTourney createNewTourney={this.createTourneyAndRedirect(history)}/>
                            }
                     />
-                    <Route path='/tourney/load' component={Layout({Content: LoadTourney})}/>
+                    <Route path='/tourney/load' component={SingleColumnLayout({Content: LoadTourney})}/>
                     <Route path='/tourney/groups'
                            render={props =>
-                               <LayoutGroups groups={this.state.groups}/>
+                               <FourColumnLayout addGroup={this.addGroup}
+                                                 tourneyName={this.state.tourneyName}
+                                                 groups={this.state.groups}
+                                                 teamAdded={this.addTeam}/>
                            }
                     />
-                    <Route path='/' component={Layout({Content: SelectionPage})}/>
+                    <Route path='/' component={SingleColumnLayout({Content: SelectionPage})}/>
                     <Redirect from='*' to='/'/>
                 </Switch>
             </div>
@@ -57,7 +85,11 @@ class App extends Component {
     }
 }
 
-const LayoutNewTourney = Layout({Content: NewTourney});
-const LayoutGroups = Layout({Content: Groups});
+function byName(teamName) {
+    return (it) => it.groupLetter === teamName;
+}
+
+
+const LayoutNewTourney = SingleColumnLayout({Content: NewTourney});
 
 export default App;

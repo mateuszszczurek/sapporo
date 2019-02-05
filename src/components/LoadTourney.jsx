@@ -1,11 +1,11 @@
 import * as React from "react";
-import {ControlLabel, FormControl, FormGroup, HelpBlock} from "react-bootstrap";
+import {ControlLabel, PageHeader, FormControl, FormGroup} from "react-bootstrap";
 
 class LoadTurney extends React.Component {
 
     render() {
         return <form style={formStyle}>
-            <h2>Wczytaj istniejący turniej</h2>
+            <PageHeader>Wczytaj istniejący turniej</PageHeader>
             <FormGroup controlId="formBasicText">
                 <FieldGroup
                     id="formControlsFile"
@@ -24,12 +24,11 @@ const formStyle = {
 };
 
 
-function FieldGroup({id, label, help, ...props}) {
+function FieldGroup({id, label, ...props}) {
     return (
         <FormGroup controlId={id}>
             <ControlLabel>{label}</ControlLabel>
             <FormControl {...props} />
-            {help && <HelpBlock>{help}</HelpBlock>}
         </FormGroup>
     );
 }

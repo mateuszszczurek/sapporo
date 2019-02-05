@@ -2,7 +2,7 @@ import React from 'react'
 import {Col, Grid, Row} from "react-bootstrap";
 import Logo from "../components/Logo";
 
-function Layout(components) {
+function SingleColumnLayout(components) {
 
     const {Content} = components;
 
@@ -24,4 +24,4 @@ function Layout(components) {
 
 }
 
-export default Layout;
+export default SingleColumnLayout;
