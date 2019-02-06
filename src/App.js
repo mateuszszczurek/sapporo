@@ -88,8 +88,11 @@ class App extends Component {
                                />
                            }
                     />
-                    <Route path='/tourney/state' render={props=>
-                        <LayoutTourneyState groups={this.state.groups}/>}/>
+                    <Route path='/tourney/state' render={props =>
+                        <LayoutTourneyState
+                            groups={this.state.groups}
+                            tourneyName={this.state.tourneyName}/>}
+                    />
                     <Route path='/' component={SingleColumnLayout({Content: SelectionPage})}/>
                     <Redirect from='*' to='/'/>
                 </Switch>

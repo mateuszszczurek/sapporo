@@ -13,6 +13,11 @@ class TourneyState extends React.Component {
         // TODO save tourney button here
         return <div>
             <Row>
+                <Col md={{span: 8}}>
+                    <h3 className='pb-3'>Turniej "{this.props.tourneyName}"</h3>
+                </Col>
+            </Row>
+            <Row>
                 <Col>
                     <Navbar bg="primary" variant="dark">
                         <Nav className="mr-auto">
@@ -25,7 +30,7 @@ class TourneyState extends React.Component {
                 </Col>
             </Row>
             <Row>
-                <Col className='mb-3'>
+                <Col md={12} className='mb-3'>
                     <TourneyDetails/>
                 </Col>
             </Row>
@@ -38,11 +43,13 @@ function GroupItems({groups}) {
 }
 
 TourneyState.propTypes = {
-    groups: PropTypes.array.isRequired
+    groups: PropTypes.array.isRequired,
+    tourneyName : PropTypes.string
 };
 
 TourneyState.defaultProps = {
-    groups: []
+    groups: [],
+    tourneyName : ""
 };
 
 export default TourneyState;
