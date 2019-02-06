@@ -14,6 +14,7 @@
 - [ ] on "Dodaj drużynę" - try to make glyphicon with circle
 - [ ] extract team as an separate object
 - [ ] work out why I need inline style in Group (margin) and why bootstrap doesn't make the space by default
+- [ ] add validation states to user inputs
 
 How to style react components: https://codeburst.io/4-four-ways-to-style-react-components-ac6f323da822<br/>
 Syntax: https://help.github.com/articles/basic-writing-and-formatting-syntax/<br/>

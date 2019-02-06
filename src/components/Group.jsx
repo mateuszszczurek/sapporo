@@ -43,12 +43,6 @@ class Group extends React.Component {
         }
     }
 
-    nonEmpty() {
-        const length = this.state.newTeamName.length;
-        if (length > 0) return 'success';
-        return null;
-    }
-
     addTeam() {
         return <div>
             <FormControl value={this.state.newTeamName}
@@ -72,7 +66,6 @@ class Group extends React.Component {
             <h2>{groupLetter}</h2>
             <Form>
                 <FormGroup
-                    validationState={this.nonEmpty()}
                     controlId={groupLetter}>
                     {groupItems(teams, groupLetter)}
                     {teams && teams.length < 8 && this.addTeam(groupLetter, teamAdded)}
