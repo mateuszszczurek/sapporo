@@ -2,12 +2,6 @@ import 'rc-collapse/assets/index.css';
 import Collapse, {Panel} from 'rc-collapse';
 import React from 'react';
 
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
-
 function random() {
     return parseInt(Math.random() * 10, 10) + 1;
 }
@@ -26,20 +20,6 @@ class TourneyDetails extends React.Component {
         });
     };
 
-    getItems() {
-        const items = [];
-        for (let i = 0, len = 3; i < len; i++) {
-            const key = i + 1;
-            items.push(
-                <Panel header={`This is panel header ${key}`} key={key}>
-                    <p>adssad</p>
-                </Panel>
-            );
-        }
-
-        return items;
-    }
-
     render() {
         const accordion = this.state.accordion;
         const activeKey = this.state.activeKey;
@@ -50,13 +30,10 @@ class TourneyDetails extends React.Component {
             activeKey={activeKey}
         >
             <Panel header='Tabela'>
-                <p></p>
             </Panel>
             <Panel header='Mecze'>
-                <p></p>
             </Panel>
             <Panel header='Wprowadź mecz'>
-                <p></p>
             </Panel>
         </Collapse>
 
