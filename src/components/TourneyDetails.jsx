@@ -5,13 +5,24 @@ import {AgGridReact} from "ag-grid-react";
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import EditMatches from "./EditMatches";
+
+
+function dupa() {
+    alert('dupa')
+}
 
 const gridOptions = {
+    suppressDragLeaveHidesColumns: true,
+    suppressMovableColumns: true,
+    enableSorting: true,
     columnDefs: [
-        {headerName: "Drużyna", field: "team", lockPosition: true, width: 600},
+        {headerName: "Drużyna", field: "team", width: 600, sortable: true},
         {
+            groupId: 1,
             headerName: "Mecze",
             marryChildren: true,
+            sortable: true,
             children: [
                 {headerName: 'Rozegr.', field: "matchesPlayed"},
                 {headerName: 'Wygr.', field: "matchesWon"},
@@ -19,8 +30,11 @@ const gridOptions = {
             ]
         },
         {
+            groupId: 2,
             headerName: "Sety",
+            suppressMovable: true,
             marryChildren: true,
+            sortable: true,
             children: [
                 {headerName: 'Wygr.', field: "setsWon"},
                 {headerName: 'Przegr.', field: "setsLost"},
@@ -28,8 +42,11 @@ const gridOptions = {
             ]
         },
         {
-            headerName: "NieWiemCoTuPisze",
-            marryChildren: true,
+            groupId: 3,
+            headerName: "Punkty",
+            suppressMovable: true,
+            lockPosition: true,
+            sortable: true,
             children: [
                 {headerName: 'Wygr.', field: "sthWon"},
                 {headerName: 'Przegr.', field: "sthLost"},
@@ -70,6 +87,7 @@ class TourneyDetails extends React.Component {
 
     onGridReady = (params) => {
         params.api.sizeColumnsToFit();
+        params.api.onSortChanged(this.aaa)
     };
 
     render() {
@@ -86,14 +104,18 @@ class TourneyDetails extends React.Component {
                     <div>
                         <AgGridReact onGridReady={this.onGridReady}
                                      gridOptions={gridOptions}
-                                     rowData={this.state.rowData}>
-                        </AgGridReact>
+                                     rowData={this.state.rowData}
+                                     onCellClicked={dupa}
+                        />
                     </div>
                 </div>
             </Panel>
             <Panel header='Mecze'>
             </Panel>
             <Panel header='Wprowadź mecz'>
+                <div>
+                    <EditMatches/>
+                </div>
             </Panel>
         </Collapse>
     }
