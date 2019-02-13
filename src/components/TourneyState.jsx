@@ -7,21 +7,28 @@ import Row from "react-bootstrap/es/Row";
 import Col from "react-bootstrap/es/Col";
 import TourneyDetails from "./TourneyDetails";
 
+// TODO save tourney button here
+
 class TourneyState extends React.Component {
 
     render() {
-        // TODO save tourney button here
+
+        const {groupChosen, tourneyName, group, groups} = this.props;
+
         return <div>
             <Row>
                 <Col md={{span: 8}}>
-                    <h3 className='pb-3'>Turniej "{this.props.tourneyName}"</h3>
+                    <h3 className='pb-3'>Turniej "{tourneyName}"</h3>
                 </Col>
             </Row>
             <Row>
                 <Col>
-                    <Navbar bg="primary" variant="dark">
+                    <Navbar bg="primary"
+                            variant="dark"
+                            onSelect={groupChosen}
+                    >
                         <Nav className="mr-auto">
-                            <GroupItems groups={this.props.groups}/>
+                            <GroupItems groups={groups}/>
                         </Nav>
                         <Form inline>
                             <Button variant="outline-light">Zapisz turniej</Button>
@@ -31,7 +38,7 @@ class TourneyState extends React.Component {
             </Row>
             <Row>
                 <Col md={12} className='mb-3'>
-                    <TourneyDetails/>
+                    <TourneyDetails group={group} onMatchAdded={this.props.onMatchAdded}/>
                 </Col>
             </Row>
         </div>
@@ -39,17 +46,22 @@ class TourneyState extends React.Component {
 }
 
 function GroupItems({groups}) {
-    return groups.map(it => <Nav.Link key={it.groupLetter}>Grupa {it.groupLetter}</Nav.Link>)
+    return groups.map(it => <Nav.Link eventKey={it.groupLetter} key={it.groupLetter}>Grupa {it.groupLetter}</Nav.Link>)
 }
 
 TourneyState.propTypes = {
     groups: PropTypes.array.isRequired,
-    tourneyName : PropTypes.string
+    group : PropTypes.object,
+    tourneyName: PropTypes.string,
+    groupChosen : PropTypes.func,
+    onMatchAdded : PropTypes.func
 };
 
 TourneyState.defaultProps = {
     groups: [],
-    tourneyName : ""
+    tourneyName: "Nazwa turnieju",
+    group : {},
+    groupChosen : () => {}
 };
 
 export default TourneyState;

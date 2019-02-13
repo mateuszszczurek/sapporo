@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import 'rc-collapse/assets/index.css';
 import Collapse, {Panel} from 'rc-collapse';
 import React from 'react';
@@ -7,9 +8,26 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import EditMatches from "./EditMatches";
 
+// TODO sortable by matches won, ratio,
+// TODO populate with data
+// TODO open and autosize to content
+// TODO extract table to another component
+// TODO no rows to show appears on table headers
+// TODO on group change -> make table full width!
 
-function dupa() {
-    alert('dupa')
+function rowEntry(teamName) {
+    return {
+        team: teamName,
+        matchesPlayed: 1,
+        matchesWon: 2,
+        matchesLost: 3,
+        setsWon : 2,
+        setsLost : 3,
+        setsRatio : 0.3,
+        pointsWon : 3,
+        pointsLost : 4,
+        pointsRatio : 0.4
+    }
 }
 
 const gridOptions = {
@@ -48,9 +66,9 @@ const gridOptions = {
             lockPosition: true,
             sortable: true,
             children: [
-                {headerName: 'Wygr.', field: "sthWon"},
-                {headerName: 'Przegr.', field: "sthLost"},
-                {headerName: 'Stosunek', field: "sthRatio"}
+                {headerName: 'Wygr.', field: "pointsWon"},
+                {headerName: 'Przegr.', field: "pointsLost"},
+                {headerName: 'Stosunek', field: "pointsRatio"}
             ]
         }
     ]
@@ -64,19 +82,9 @@ class TourneyDetails extends React.Component {
         this.onGridReady = this.onGridReady.bind(this);
     }
 
-    // TODO sortable by matches won, ratio,
-    // TODO populate with data
-    // TODO open and autosize to content
-    // TODO extract table to another component (?)
-
     state = {
         accordion: true,
-        activeKey: ['0'],
-        rowData: [
-            {make: "Toyota", model: "Celica", price: 35000},
-            {make: "Ford", model: "Mondeo", price: 32000},
-            {make: "Porsche", model: "Boxter", price: 72000}
-        ]
+        activeKey: ['0']
     };
 
     onChange = (activeKey) => {
@@ -92,6 +100,8 @@ class TourneyDetails extends React.Component {
 
     render() {
 
+        const {group} = this.props;
+
         const activeKey = this.state.activeKey;
 
         return <Collapse
@@ -104,8 +114,7 @@ class TourneyDetails extends React.Component {
                     <div>
                         <AgGridReact onGridReady={this.onGridReady}
                                      gridOptions={gridOptions}
-                                     rowData={this.state.rowData}
-                                     onCellClicked={dupa}
+                                     rowData={group.teams.map(it=>rowEntry(it))}
                         />
                     </div>
                 </div>
@@ -114,11 +123,18 @@ class TourneyDetails extends React.Component {
             </Panel>
             <Panel header='Wprowadź mecz'>
                 <div>
-                    <EditMatches/>
+                    <EditMatches group={this.props.group} onMatchAdded={this.props.onMatchAdded}/>
                 </div>
             </Panel>
         </Collapse>
     }
 }
+
+TourneyDetails.propTypes = {
+
+    group: PropTypes.object.isRequired,
+    onMatchAdded : PropTypes.func
+
+};
 
 export default TourneyDetails;

@@ -22,8 +22,26 @@ class App extends Component {
         this.pickTourneyName = this.pickTourneyName.bind(this);
         this.addTeam = this.addTeam.bind(this);
         this.approveGroups = this.approveGroups.bind(this);
+        this.groupChosen = this.groupChosen.bind(this);
+        this.onMatchAdded = this.onMatchAdded.bind(this);
 
-        this.state = {groups: [{groupLetter: "A", teams: []}]};
+        this.state = {
+            groups: [
+                {groupLetter: "A", teams: []}
+            ],
+            matches : [],
+            currentlyDisplayedGroup : "A"
+        };
+    }
+
+    onMatchAdded(firstTeam, secondTeam, sets) {
+        const matches = this.state.matches.slice();
+        matches.push({firstTeam : firstTeam, secondTeam : secondTeam, sets : sets});
+        this.setState({matches : matches})
+    }
+
+    groupChosen(groupLetter) {
+        this.setState({currentlyDisplayedGroup : groupLetter})
     }
 
     addGroup() {
@@ -50,8 +68,7 @@ class App extends Component {
     }
 
     approveGroups(history) {
-        return e => {
-
+        return () => {
             history.push('/tourney/state')
         }
     }
@@ -90,8 +107,12 @@ class App extends Component {
                     />
                     <Route path='/tourney/state' render={props =>
                         <LayoutTourneyState
-                            groups={this.state.groups}
-                            tourneyName={this.state.tourneyName}/>}
+                            groups={this.state.groups.map(it => Object.assign({}, {groupLetter : it.groupLetter}))}
+                            group={this.state.groups.find(it => it.groupLetter === this.state.currentlyDisplayedGroup)}
+                            tourneyName={this.state.tourneyName}
+                            groupChosen={this.groupChosen}
+                            onMatchAdded={this.onMatchAdded}
+                        />}
                     />
                     <Route path='/' component={SingleColumnLayout({Content: SelectionPage})}/>
                     <Redirect from='*' to='/'/>
