@@ -28,7 +28,9 @@ class TourneyState extends React.Component {
                             onSelect={groupChosen}
                     >
                         <Nav className="mr-auto">
-                            <GroupItems groups={groups}/>
+                            <GroupItems activeGroup={group.groupLetter}
+                                        groups={groups}
+                            />
                         </Nav>
                         <Form inline>
                             <Button variant="outline-light">Zapisz turniej</Button>
@@ -45,23 +47,31 @@ class TourneyState extends React.Component {
     }
 }
 
-function GroupItems({groups}) {
-    return groups.map(it => <Nav.Link eventKey={it.groupLetter} key={it.groupLetter}>Grupa {it.groupLetter}</Nav.Link>)
+function GroupItems({activeGroup, groups}) {
+    return groups.map(it =>
+        <Nav.Link eventKey={it.groupLetter}
+                  key={it.groupLetter}
+                  active={it.groupLetter === activeGroup}
+        >
+            Grupa {it.groupLetter}
+        </Nav.Link>
+    )
 }
 
 TourneyState.propTypes = {
     groups: PropTypes.array.isRequired,
-    group : PropTypes.object,
+    group: PropTypes.object,
     tourneyName: PropTypes.string,
-    groupChosen : PropTypes.func,
-    onMatchAdded : PropTypes.func
+    groupChosen: PropTypes.func,
+    onMatchAdded: PropTypes.func
 };
 
 TourneyState.defaultProps = {
     groups: [],
     tourneyName: "Nazwa turnieju",
-    group : {},
-    groupChosen : () => {}
+    group: {},
+    groupChosen: () => {
+    }
 };
 
 export default TourneyState;

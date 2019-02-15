@@ -10,7 +10,7 @@ import Button from "react-bootstrap/es/Button";
 import TeamDropdown from "./TeamDropdown";
 import Form from "react-bootstrap/es/Form";
 
-class EditMatches extends React.Component {
+class AddMatch extends React.Component {
 
     // TODO - add version number
     // TODO - empty groups are not displayed and considered
@@ -35,17 +35,19 @@ class EditMatches extends React.Component {
     }
 
     onSetChanged(setNumber, selectionId) {
-        return e => {
-            const set = Object.assign({}, {...this.state.sets[setNumber], selectionId : selectionId, [selectionId] : e.target.value});
+        return value => {
+            const set = Object.assign({}, {
+                ...this.state.sets[setNumber],
+                [selectionId]: value
+            });
             const newSets = Object.assign({}, {...this.state.sets});
             newSets[setNumber] = set;
-            console.log(newSets);
-            this.setState({sets : newSets});
+            this.setState({sets: newSets});
         }
     }
 
     onMatchAdded() {
-        if (this.state.teamsSelection.length <= 2) {
+        if (this.state.teamsSelection.length < 2) {
             alert('tried to store result without choosing team');
             // consider disabling button if two teams are not chosen
             return;
@@ -53,7 +55,11 @@ class EditMatches extends React.Component {
         const firstTeam = this.state.teamsSelection[0].selectedTeam;
         const secondTeam = this.state.teamsSelection[1].selectedTeam;
 
-        this.props.onMatchAdded(firstTeam, secondTeam, []);
+        // TODO shouldn't be able to add match without any sets!
+        // TODO flush state from set - make selection - unselected
+        // TODO Make it possible to edit match or forbid to choose already chosen match
+        this.props.onMatchAdded(firstTeam, secondTeam, this.state.sets);
+        this.setState({sets: [], teamsSelection: []})
     }
 
     teamSelectionFor(selectionId) {
@@ -145,21 +151,35 @@ function Set(props) {
             <h4 key={setNumber}>{setNumber} set</h4>
         </Col>
         <Col md={{span: 2, offset: 1}}>
-            <Form.Control as='input' type='text' value={firstTeamResult || ''} onChange={onSetChange(setNumber, 'first-team')}/>
+            <Form.Control as='input' type='text' value={zeroOrNumberOrEmpty(firstTeamResult)}
+                          onChange={e => allowEmptyOrNumber(e, onSetChange(setNumber, 'first-team'))
+                          }/>
         </Col>
         <Col md={{span: 2, offset: 1}}>
             <h5 className='text-center'>:</h5>
         </Col>
         <Col md={{span: 2, offset: 1}}>
-            <Form.Control as='input' type='text' value={secondTeamResult || ''} onChange={onSetChange(setNumber, 'second-team')}/>
+            <Form.Control as='input' type='text' value={zeroOrNumberOrEmpty(secondTeamResult)}
+                          onChange={e => allowEmptyOrNumber(e, onSetChange(setNumber, 'second-team'))}/>
         </Col>
     </Row>
 }
 
-EditMatches.propTypes = {
+function allowEmptyOrNumber(e, callback) {
+    const number = /^[0-9\b]+$/;
+
+    const value = e.target.value;
+    e.target.value === '' ? callback(null) : number.test(value) && callback(parseInt(value));
+}
+
+function zeroOrNumberOrEmpty(firstTeamResult) {
+    return firstTeamResult === 0 ? firstTeamResult : firstTeamResult || '';
+}
+
+AddMatch.propTypes = {
 
     group: PropTypes.object.isRequired
 
 };
 
-export default EditMatches;
+export default AddMatch;

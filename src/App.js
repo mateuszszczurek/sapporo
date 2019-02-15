@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 
 import './App.css'
 
@@ -13,7 +13,7 @@ import NewTourney from "./components/NewTourney";
 import Groups from "./components/Groups";
 import TourneyState from "./components/TourneyState";
 
-class App extends Component {
+class App extends React.Component {
 
     constructor(props) {
         super(props);
@@ -27,27 +27,42 @@ class App extends Component {
 
         this.state = {
             groups: [
-                {groupLetter: "A", teams: []}
+                {groupLetter: "A", teams: [], matches: []}
             ],
-            matches : [],
-            currentlyDisplayedGroup : "A"
+            currentlyDisplayedGroup: "A"
         };
     }
 
-    onMatchAdded(firstTeam, secondTeam, sets) {
-        const matches = this.state.matches.slice();
-        matches.push({firstTeam : firstTeam, secondTeam : secondTeam, sets : sets});
-        this.setState({matches : matches})
+    onMatchAdded(groupLetter, firstTeam, secondTeam, sets) {
+
+        // TODO refactor it to a match object
+        // TODO think if defined objects help with immutable operations
+
+        const {groups} = this.state;
+
+        const groupIndex = groups.findIndex(group => group.groupLetter === groupLetter);
+        const group = groups[groupIndex];
+
+        const newMatches = group.matches.slice();
+        newMatches.push({firstTeam: firstTeam, secondTeam: secondTeam, sets: sets});
+
+        const newGroups = [
+            ...groups.slice(0, groupIndex),
+            {...group, matches: newMatches},
+            ...groups.slice(groupIndex + 1,)
+        ];
+
+        this.setState({groups: newGroups});
     }
 
     groupChosen(groupLetter) {
-        this.setState({currentlyDisplayedGroup : groupLetter})
+        this.setState({currentlyDisplayedGroup: groupLetter})
     }
 
     addGroup() {
         let lastGroup = this.state.groups.map(it => it.groupLetter).slice().pop();
         let newGroupLetter = String.fromCharCode(lastGroup.charCodeAt(0) + 1);
-        const groups = [...this.state.groups, {groupLetter: newGroupLetter, teams: []}];
+        const groups = [...this.state.groups, {groupLetter: newGroupLetter, teams: [], matches: []}];
         this.setState({groups: groups})
     }
 
@@ -107,7 +122,7 @@ class App extends Component {
                     />
                     <Route path='/tourney/state' render={props =>
                         <LayoutTourneyState
-                            groups={this.state.groups.map(it => Object.assign({}, {groupLetter : it.groupLetter}))}
+                            groups={this.state.groups.map(it => Object.assign({}, {groupLetter: it.groupLetter}))}
                             group={this.state.groups.find(it => it.groupLetter === this.state.currentlyDisplayedGroup)}
                             tourneyName={this.state.tourneyName}
                             groupChosen={this.groupChosen}

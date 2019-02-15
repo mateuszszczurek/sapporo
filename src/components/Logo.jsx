@@ -6,4 +6,4 @@ const pageHeader = {
     borderBottom: '1px solid #eee'
 }
 
-export default () => <div style={pageHeader}><h1>Volleyball Tournament App</h1></div>
+export default () => <div style={pageHeader}><h1>Volleyball Tournament App+</h1></div>

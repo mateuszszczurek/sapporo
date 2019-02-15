@@ -8,10 +8,6 @@ import Dropdown from "react-bootstrap/es/Dropdown";
 
 class TeamDropdown extends React.Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
 
         const {teamSelected, onTeamSelected, allTeams} = this.props;
