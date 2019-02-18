@@ -35,28 +35,30 @@ class TourneyDetails extends React.Component {
 
         const activeKey = this.state.activeKey;
 
-        return <Collapse
-            accordion={false}
-            onChange={this.onChange}
-            activeKey={activeKey}
-        >
-            <Panel header='Tabela'>
-                <GroupSummaryTable matches={group.matches}
-                                   teams={group.teams}
-                />
-            </Panel>
-            <Panel header='Mecze'>
-                <Matches matches={group.matches}/>
-            </Panel>
-            <Panel header='Wprowadź mecz'>
-                <div>
-                    <EditMatches
-                        group={this.props.group}
-                        onMatchAdded={(firstTeam, secondTeam, sets) => this.props.onMatchAdded(group.groupLetter, firstTeam, secondTeam, sets)}
+        return <div>
+            <Collapse
+                accordion={false}
+                onChange={this.onChange}
+                activeKey={activeKey}
+            >
+                <Panel header='Tabela'>
+                    <GroupSummaryTable matches={group.matches}
+                                       teams={group.teams}
                     />
-                </div>
-            </Panel>
-        </Collapse>
+                </Panel>
+                <Panel header='Mecze'>
+                    <Matches matches={group.matches}/>
+                </Panel>
+                <Panel header='Wprowadź mecz'>
+                    <div>
+                        <EditMatches
+                            group={this.props.group}
+                            onMatchAdded={(firstTeam, secondTeam, sets) => this.props.onMatchAdded(group.groupLetter, firstTeam, secondTeam, sets)}
+                        />
+                    </div>
+                </Panel>
+            </Collapse>
+        </div>
     }
 }
 

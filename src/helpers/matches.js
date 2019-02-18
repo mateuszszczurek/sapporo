@@ -22,7 +22,8 @@ export function matchSummary(match) {
         secondTeamSetsLost: firstTeamSetsWon,
         sets: sets,
         winner: firstTeamSetsWon > secondTeamSetsWon ? match.firstTeam : match.secondTeam,
-        looser: firstTeamSetsWon < secondTeamSetsWon ? match.firstTeam : match.secondTeam
+        looser: firstTeamSetsWon < secondTeamSetsWon ? match.firstTeam : match.secondTeam,
+        draw : firstTeamSetsWon === secondTeamSetsWon
     }
 
 }
@@ -33,16 +34,26 @@ function safeRatio(divisor, dividend) {
 
 function setsSummary(team, matches) {
 
-    const summaries = matches.map(match => matchSummary(match));
-    const sumOfSets = summaries.map(it => it.sets.length).reduce((sum, value) => sum + value, 0);
+    const eachMatchSummary = matches.map(match => matchSummary(match));
+    const sumOfSets = eachMatchSummary.map(it => it.sets.length).reduce((sum, value) => sum + value, 0);
 
-    const setsWon = summaries.map(it => it.firstTeamName === team ? it.firstTeamSetsWon : it.secondTeamSetsWon);
+    let wins = function () {
+        return eachMatchSummary.filter(match => match.winner === team).length;
+    };
 
-    const pointsWon = summaries
+    let draws = function () {
+        return eachMatchSummary.filter(match => match.draw === true).length;
+    };
+
+    const points = (wins() * 2) + (draws() * 1);
+
+    const setsWon = eachMatchSummary.map(it => it.firstTeamName === team ? it.firstTeamSetsWon : it.secondTeamSetsWon);
+
+    const pointsWon = eachMatchSummary
         .map(it => it.firstTeamName === team ? it.firstTeamTotalPoints : it.secondTeamTotalPoints)
         .reduce((a, b) => a + b, 0);
 
-    const pointsLost = summaries
+    const pointsLost = eachMatchSummary
         .map(it => it.firstTeamName === team ? it.secondTeamTotalPoints : it.firstTeamTotalPoints)
         .reduce((a, b) => a + b, 0);
 
@@ -54,6 +65,7 @@ function setsSummary(team, matches) {
 
     return {
         teamName: team,
+        points : points,
         setsWon: amountOfSetsWon,
         setsLost: setsLost,
         setsRatio: setsRatio,
@@ -79,6 +91,7 @@ export function groupSummary(matches, teams) {
             matchesPlayed: matchesPlayed.length,
             matchesWon: wonMatches.length,
             matchesLost: lostMatches.length,
+            points : summary.points,
             setsWon: summary.setsWon,
             setsLost: summary.setsLost,
             setsRatio: summary.setsRatio,
