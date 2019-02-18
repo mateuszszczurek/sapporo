@@ -7,13 +7,11 @@ import Row from "react-bootstrap/es/Row";
 import Col from "react-bootstrap/es/Col";
 import TourneyDetails from "./TourneyDetails";
 
-// TODO save tourney button here
-
 class TourneyState extends React.Component {
 
     render() {
 
-        const {groupChosen, tourneyName, group, groups} = this.props;
+        const {saveTourneyState, groupChosen, tourneyName, group, groups} = this.props;
 
         return <div>
             <Row>
@@ -33,7 +31,9 @@ class TourneyState extends React.Component {
                             />
                         </Nav>
                         <Form inline>
-                            <Button variant="outline-light">Zapisz turniej</Button>
+                            <Button
+                                onClick={saveTourneyState}
+                                variant="outline-light">Zapisz turniej</Button>
                         </Form>
                     </Navbar>
                 </Col>
@@ -63,7 +63,8 @@ TourneyState.propTypes = {
     group: PropTypes.object,
     tourneyName: PropTypes.string,
     groupChosen: PropTypes.func,
-    onMatchAdded: PropTypes.func
+    onMatchAdded: PropTypes.func,
+    saveTourneyState : PropTypes.func
 };
 
 TourneyState.defaultProps = {

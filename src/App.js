@@ -12,6 +12,9 @@ import SingleColumnLayout from "./hoc/SingleColumnLayout";
 import NewTourney from "./components/NewTourney";
 import Groups from "./components/Groups";
 import TourneyState from "./components/TourneyState";
+import {saveAs} from 'file-saver';
+
+import uuidv4 from 'uuid/v4';
 
 class App extends React.Component {
 
@@ -24,6 +27,10 @@ class App extends React.Component {
         this.approveGroups = this.approveGroups.bind(this);
         this.groupChosen = this.groupChosen.bind(this);
         this.onMatchAdded = this.onMatchAdded.bind(this);
+        this.saveTourneyState = this.saveTourneyState.bind(this);
+        this.loadTourneyState = this.loadTourneyState.bind(this);
+        this.redirectToGroups = this.redirectToGroups.bind(this);
+        this.proceedToState = this.proceedToState.bind(this);
 
         this.state = {
             groups: [
@@ -31,6 +38,19 @@ class App extends React.Component {
             ],
             currentlyDisplayedGroup: "A"
         };
+    }
+
+    loadTourneyState(history) {
+        return state => {
+            this.setState(JSON.parse(state));
+            this.proceedToState(history)
+        }
+    }
+
+    saveTourneyState() {
+        const blob = new Blob([JSON.stringify(this.state)], {type: "text/plain;charset=utf-8"});
+        const fileName = `${this.state.tourneyName ? this.state.tourneyName : 'tourney'}.txt`;
+        saveAs(blob, fileName)
     }
 
     onMatchAdded(groupLetter, firstTeam, secondTeam, sets) {
@@ -44,7 +64,7 @@ class App extends React.Component {
         const group = groups[groupIndex];
 
         const newMatches = group.matches.slice();
-        newMatches.push({firstTeam: firstTeam, secondTeam: secondTeam, sets: sets});
+        newMatches.push({firstTeam: firstTeam, secondTeam: secondTeam, sets: sets, id: uuidv4()});
 
         const newGroups = [
             ...groups.slice(0, groupIndex),
@@ -83,9 +103,12 @@ class App extends React.Component {
     }
 
     approveGroups(history) {
-        return () => {
-            history.push('/tourney/state')
-        }
+        return () => this.proceedToState(history);
+
+    }
+
+    proceedToState(history) {
+        history.push('/tourney/state')
     }
 
     pickTourneyName(toruneyName) {
@@ -95,8 +118,12 @@ class App extends React.Component {
     createTourneyAndRedirect(history) {
         return (tourneyName) => {
             this.pickTourneyName(tourneyName);
-            history.push('/tourney/groups')
+            this.redirectToGroups(history);
         }
+    }
+
+    redirectToGroups(history) {
+        history.push('/tourney/groups')
     }
 
     render() {
@@ -105,11 +132,12 @@ class App extends React.Component {
             <div>
                 <Switch>
                     <Route path='/tourney/new'
-                           render={props =>
-                               <LayoutNewTourney createNewTourney={this.createTourneyAndRedirect(history)}/>
-                           }
+                           render={props => <LayoutNewTourney
+                               createNewTourney={this.createTourneyAndRedirect(history)}/>}
                     />
-                    <Route path='/tourney/load' component={SingleColumnLayout({Content: LoadTourney})}/>
+                    <Route path='/tourney/load'
+                           render={props =>
+                               <LayoutLoadTourney loadTourney={this.loadTourneyState(history)}/>}/>
                     <Route path='/tourney/groups'
                            render={props =>
                                <Groups addGroup={this.addGroup}
@@ -122,6 +150,7 @@ class App extends React.Component {
                     />
                     <Route path='/tourney/state' render={props =>
                         <LayoutTourneyState
+                            saveTourneyState={this.saveTourneyState}
                             groups={this.state.groups.map(it => Object.assign({}, {groupLetter: it.groupLetter}))}
                             group={this.state.groups.find(it => it.groupLetter === this.state.currentlyDisplayedGroup)}
                             tourneyName={this.state.tourneyName}
@@ -143,5 +172,6 @@ function byName(teamName) {
 
 const LayoutNewTourney = SingleColumnLayout({Content: NewTourney});
 const LayoutTourneyState = SingleColumnLayout({Content: TourneyState}, 12, 0);
+const LayoutLoadTourney = SingleColumnLayout({Content: LoadTourney}, 12, 0);
 
 export default App;

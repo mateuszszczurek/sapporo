@@ -65,8 +65,7 @@ class Group extends React.Component {
         return <div>
             <h2>{groupLetter}</h2>
             <Form>
-                <FormGroup
-                    controlId={groupLetter}>
+                <FormGroup>
                     {groupItems(teams, groupLetter)}
                     {teams && teams.length < 8 && this.addTeam(groupLetter, teamAdded)}
                 </FormGroup>

@@ -48,7 +48,7 @@ class AddMatch extends React.Component {
 
     onMatchAdded() {
         if (this.state.teamsSelection.length < 2) {
-            alert('tried to store result without choosing team');
+            alert('Proszę wybrać obie drużyny');
             // consider disabling button if two teams are not chosen
             // todo - check if at least on set populated
             // todo - check if we don't have unfilled sets

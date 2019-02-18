@@ -35,6 +35,7 @@ class Set extends React.Component {
     render() {
 
         const {setNumber, firstTeamResult, secondTeamResult, onSetChange} = this.props;
+
         return <div>
             <Form>
                 <Form.Row key={setNumber} className='mb-1'>
@@ -43,11 +44,9 @@ class Set extends React.Component {
                     </Form.Group>
                     <Form.Group as={Col} md={{span: 2, offset: 1}}>
                         <Form.Control as='input'
-                                      className={'text-danger is-invalid'}
                                       type='text'
                                       value={zeroOrNumberOrEmpty(firstTeamResult)}
                                       onChange={e => allowEmptyOrNumber(e, onSetChange(setNumber, 'first-team'))}
-                                      validated={false}
                         />
                         {this.props.creationAttempted && !firstTeamResult && <MissingPoints/>}
                     </Form.Group>
@@ -86,9 +85,16 @@ Set.propTypes = {
     firstTeam: PropTypes.string,
     secondTeam: PropTypes.string,
     setNumber: PropTypes.number,
-    firstTeamResult: PropTypes.number,
-    secondTeamResult: PropTypes.number,
+    firstTeamResult: PropTypes.string,
+    secondTeamResult: PropTypes.string,
     onSetChange: PropTypes.func
+
+};
+
+Set.defaultProps = {
+
+    firstTeamResult : '',
+    secondTeamResult : ''
 
 };
 

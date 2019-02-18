@@ -24,7 +24,7 @@ class NewToruney extends React.Component {
     handleTourneyCreation() {
         return e => {
             e.preventDefault();
-            if(!this.state.value || !this.state.value.trim()){
+            if (!this.state.value || !this.state.value.trim()) {
                 //TODO make it common util for checking empty string and preventing form action (same as for group addition)
             } else {
                 this.props.createNewTourney(this.state.value);
@@ -33,9 +33,8 @@ class NewToruney extends React.Component {
     }
 
     render() {
-        return <form
-            style={formStyle}
-            onSubmit={this.handleTourneyCreation()}>
+        return <Form className={'border border-primary p-3'}
+                     onSubmit={this.handleTourneyCreation()}>
             <h2>Stwórz nowy turniej</h2>
             <Form.Group controlId='formBasicText'>
                 <Form.Label>Podaj nazwę turniej</Form.Label>
@@ -46,18 +45,15 @@ class NewToruney extends React.Component {
                     onChange={this.handleChange}
                 />
             </Form.Group>
-            <Button type="submit">Stwórz</Button>
-        </form>
+            <div>
+                <Button type="submit">Stwórz</Button>
+            </div>
+        </Form>
     }
 }
 
-const formStyle = {
-    border: 'thin black solid',
-    padding: '20px'
-};
-
 NewToruney.propTypes = {
-    createNewTourney : PropTypes.func
+    createNewTourney: PropTypes.func
 };
 
 export default NewToruney;

@@ -13,7 +13,7 @@ class MatchesDetails extends React.Component {
 
         return matches.map(match =>
             <ResultRow
-                key={match.firstTeam + match.secondTeam}
+                key={match.id}
                 firstTeam={match.firstTeam}
                 secondTeam={match.secondTeam}
                 match={match}
