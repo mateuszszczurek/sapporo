@@ -20,7 +20,7 @@ class TourneyDetails extends React.Component {
 
     state = {
         accordion: true,
-        activeKey: ['0']
+        activeKey: ['0', '1', '2']
     };
 
     onChange = (activeKey) => {

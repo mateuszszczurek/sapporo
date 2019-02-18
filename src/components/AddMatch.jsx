@@ -8,7 +8,7 @@ import Row from "react-bootstrap/es/Row";
 import {Col} from "react-bootstrap";
 import Button from "react-bootstrap/es/Button";
 import TeamDropdown from "./TeamDropdown";
-import Form from "react-bootstrap/es/Form";
+import Set from "./Set";
 
 class AddMatch extends React.Component {
 
@@ -50,8 +50,19 @@ class AddMatch extends React.Component {
         if (this.state.teamsSelection.length < 2) {
             alert('tried to store result without choosing team');
             // consider disabling button if two teams are not chosen
+            // todo - check if at least on set populated
+            // todo - check if we don't have unfilled sets
+            // todo - check if we have draws
             return;
         }
+
+        const setsValidation = Object.keys(this.state.sets).map(key => validateSet(key, this.state.sets[key]));
+
+        if (setsValidation.filter(it => it.validation) > 0) {
+            this.setState({validationResults: setsValidation, creationAttempted: true});
+            return;
+        }
+
         const firstTeam = this.state.teamsSelection[0].selectedTeam;
         const secondTeam = this.state.teamsSelection[1].selectedTeam;
 
@@ -59,7 +70,7 @@ class AddMatch extends React.Component {
         // TODO flush state from set - make selection - unselected
         // TODO Make it possible to edit match or forbid to choose already chosen match
         this.props.onMatchAdded(firstTeam, secondTeam, this.state.sets);
-        this.setState({sets: [], teamsSelection: []})
+        this.setState({sets: [], teamsSelection: [], creationAttempted: false})
     }
 
     teamSelectionFor(selectionId) {
@@ -126,6 +137,7 @@ class AddMatch extends React.Component {
                      setNumber={setNumber}
                      firstTeam={'first-team'}
                      secondTeam={'second-team'}
+                     creationAttempted={this.state.creationAttempted}
                      firstTeamResult={this.state.sets[setNumber] ? this.state.sets[setNumber]['first-team'] : ''}
                      secondTeamResult={this.state.sets[setNumber] ? this.state.sets[setNumber]['second-team'] : ''}
                      onSetChange={this.onSetChanged}/>
@@ -144,36 +156,42 @@ class AddMatch extends React.Component {
 
 }
 
-function Set(props) {
-    const {setNumber, firstTeamResult, secondTeamResult, onSetChange} = props;
-    return <Row key={setNumber} className='mb-1'>
-        <Col md={1}>
-            <h4 key={setNumber}>{setNumber} set</h4>
-        </Col>
-        <Col md={{span: 2, offset: 1}}>
-            <Form.Control as='input' type='text' value={zeroOrNumberOrEmpty(firstTeamResult)}
-                          onChange={e => allowEmptyOrNumber(e, onSetChange(setNumber, 'first-team'))
-                          }/>
-        </Col>
-        <Col md={{span: 2, offset: 1}}>
-            <h5 className='text-center'>:</h5>
-        </Col>
-        <Col md={{span: 2, offset: 1}}>
-            <Form.Control as='input' type='text' value={zeroOrNumberOrEmpty(secondTeamResult)}
-                          onChange={e => allowEmptyOrNumber(e, onSetChange(setNumber, 'second-team'))}/>
-        </Col>
-    </Row>
-}
+function validateSet(setNumber, setResults) {
+    const firstResult = setResults['first-team'];
+    const secondResult = setResults['second-team'];
 
-function allowEmptyOrNumber(e, callback) {
-    const number = /^[0-9\b]+$/;
+    const validationResults = {setNumber: setNumber};
 
-    const value = e.target.value;
-    e.target.value === '' ? callback(null) : number.test(value) && callback(parseInt(value));
-}
+    if (firstResult === 0) {
+        validationResults.firstResultsMissing = true;
+        validationResults.hasValidationResults = true;
+    }
 
-function zeroOrNumberOrEmpty(firstTeamResult) {
-    return firstTeamResult === 0 ? firstTeamResult : firstTeamResult || '';
+    if (secondResult === 0) {
+        validationResults.secondResultMissing = true;
+        validationResults.hasValidationResults = true;
+    }
+
+    if (!firstResult && !secondResult) {
+        validationResults.hasValidationResults = false;
+        return validationResults;
+    }
+
+    if (firstResult === secondResult) {
+        validationResults.isDraw = true;
+        validationResults.hasValidationResults = true;
+    }
+
+    if (!firstResult) {
+        validationResults.firstResultsMissing = true;
+    }
+
+    if(!secondResult) {
+        validationResults.secondResultMissing = true;
+    }
+
+    return validationResults;
+
 }
 
 AddMatch.propTypes = {
