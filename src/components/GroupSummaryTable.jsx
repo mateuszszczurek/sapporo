@@ -35,7 +35,7 @@ const gridOptions = {
             children: [
                 {headerName: 'Wygr.', field: "setsWon"},
                 {headerName: 'Przegr.', field: "setsLost"},
-                {headerName: 'Stosunek', field: "setsRatio"}
+                {headerName: 'Stosunek', field: "setsRatio", valueFormatter: twoDigits}
             ]
         },
         {
@@ -47,11 +47,19 @@ const gridOptions = {
             children: [
                 {headerName: 'Wygr.', field: "pointsWon"},
                 {headerName: 'Przegr.', field: "pointsLost"},
-                {headerName: 'Stosunek', field: "pointsRatio"}
+                {headerName: 'Stosunek', field: "pointsRatio", valueFormatter: twoDigits}
             ]
         }
     ]
 };
+
+function twoDigits(target) {
+    if (target.value !== 0 && !target.value) {
+        return '-';
+    }
+
+    return parseFloat(target.value).toFixed(2);
+}
 
 const exampleData = {
 
@@ -65,16 +73,16 @@ const exampleData = {
                     'second-team': 1
                 },
                 2: {
-                    'first-team': 22,
-                    'second-team': 3
+                    'first-team': 10,
+                    'second-team': 1
                 },
                 3: {
-                    'first-team': 32,
-                    'second-team': 21
+                    'first-team': 10,
+                    'second-team': 1
                 },
                 4: {
                     'first-team': 0,
-                    'second-team': 21
+                    'second-team': 1
                 }
             }
         },
@@ -162,7 +170,7 @@ const exampleData = {
                 },
                 5: {
                     'first-team': 50,
-                    'second-team': 21
+                    'second-team': 210
                 }
             }
         }
@@ -190,7 +198,6 @@ class GroupSummaryTable extends React.Component {
 
     onGridReady = (params) => {
         params.api.sizeColumnsToFit();
-        params.api.onSortChanged(this.aaa)
     };
 
     render() {
