@@ -14,18 +14,12 @@ const gridOptions = {
     suppressMovableColumns: true,
     suppressLoadingOverlay: true,
     suppressNoRowsOverlay: true,
-    icons : {
-        sortAscending : ' ',
-        sortDescending : ' ',
-        sortUnSort : ' '
-    },
-    defaultColumnDef : {
-        resizable: true,
-    },
     columnDefs: [
-        {headerName: "Drużyna", field: "team", width: 500,
-            cellClass: 'cell-wrap-text',  autoHeight : true},
-        {headerName: "Punkty", field: "matchPoints", width: 250, unSortIcon: true, sortable : true},
+        {
+            headerName: "Drużyna", field: "team", width: 500,
+            cellClass: 'cell-wrap-text', autoHeight: true
+        },
+        {headerName: "Punkty", field: "matchPoints", width: 250, unSortIcon: true},
         {
             groupId: 1,
             headerName: "Mecze",
@@ -45,7 +39,8 @@ const gridOptions = {
             children: [
                 {headerName: 'Wygr.', field: "setsWon"},
                 {headerName: 'Przegr.', field: "setsLost"},
-                {headerName: 'Stos.', field: "setsRatio", valueFormatter: twoDigits, sortable : true}
+                {headerName: 'Remis.', field: "setsDraw"},
+                {headerName: 'Stos.', field: "setsRatio", valueFormatter: twoDigits}
             ]
         },
         {
@@ -56,7 +51,7 @@ const gridOptions = {
             children: [
                 {headerName: 'Wygr.', field: "pointsWon"},
                 {headerName: 'Przegr.', field: "pointsLost"},
-                {headerName: 'Stos.', field: "pointsRatio", valueFormatter: twoDigits, sortable : true}
+                {headerName: 'Stos.', field: "pointsRatio", valueFormatter: twoDigits}
             ]
         }
     ]
@@ -79,12 +74,6 @@ class GroupSummaryTable extends React.Component {
     }
 
     onGridReady = (params) => {
-        const sortModel = [
-            {colId: 'points', sort: 'desc'},
-            {colId: 'setsRatio', sort: 'desc'},
-            {colId: 'pointsRatio', sort: 'desc'}
-        ];
-        params.api.setSortModel(sortModel);
         params.api.sizeColumnsToFit();
     };
 
@@ -94,12 +83,24 @@ class GroupSummaryTable extends React.Component {
 
         const summary = groupSummary(matches, teams);
 
+        const sorted = summary.sort(function sortSummary(firstTeam, secondTeam) {
+                if (firstTeam.matchPoints > secondTeam.matchPoints) return -1;
+                if (firstTeam.matchPoints < secondTeam.matchPoints) return 1;
+                if (firstTeam.setsRatio > secondTeam.setsRatio) return -1;
+                if (firstTeam.setsRatio < secondTeam.setsRatio) return 1;
+                if (firstTeam.pointsRatio > secondTeam.pointsRatio) return -1;
+                if (firstTeam.pointsRatio < secondTeam.pointsRatio) return 1;
+
+                return 1;
+            }
+        );
+
         return <div className="ag-theme-balham">
             <div style={{overflow: 'auto'}}>
                 <AgGridReact
                     onGridReady={this.onGridReady}
-                             gridOptions={gridOptions}
-                             rowData={summary}
+                    gridOptions={gridOptions}
+                    rowData={sorted}
                 />
             </div>
         </div>

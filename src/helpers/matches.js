@@ -5,6 +5,12 @@ export function matchSummary(match) {
     const winningSetsFirstTeam = sets.filter(set => set['first-team'] > set['second-team']);
     const winningSetsSecondTeam = sets.filter(set => set['first-team'] < set['second-team']);
 
+    const drawSets = sets.filter(set => set['first-team'] === set['second-team']).length;
+
+    if (drawSets > 0) {
+        throw new Error("Encountered sets with draw!")
+    }
+
     const firstTeamTotalPoints = sets.map(set => set['first-team']).reduce((a, b) => a + b, 0);
     const secondTeamTotalPoints = sets.map(set => set['second-team']).reduce((a, b) => a + b, 0);
 
@@ -44,16 +50,15 @@ function safeRatio(divisor, dividend) {
 
 function setsSummary(team, matches) {
 
-    const eachMatchSummary = matches.map(match => matchSummary(match));
-    const sumOfSets = eachMatchSummary.map(it => it.sets.length).reduce((sum, value) => sum + value, 0);
+    const sumOfSets = matches.map(it => it.sets.length).reduce((sum, value) => sum + value, 0);
 
-    const setsWon = eachMatchSummary.map(it => it.firstTeamName === team ? it.firstTeamSetsWon : it.secondTeamSetsWon);
+    const setsWon = matches.map(it => it.firstTeamName === team ? it.firstTeamSetsWon : it.secondTeamSetsWon);
 
-    const pointsWon = eachMatchSummary
+    const pointsWon = matches
         .map(it => it.firstTeamName === team ? it.firstTeamTotalPoints : it.secondTeamTotalPoints)
         .reduce((a, b) => a + b, 0);
 
-    const pointsLost = eachMatchSummary
+    const pointsLost = matches
         .map(it => it.firstTeamName === team ? it.secondTeamTotalPoints : it.firstTeamTotalPoints)
         .reduce((a, b) => a + b, 0);
 
@@ -79,7 +84,8 @@ export function groupSummary(matches, teams) {
 
     return teams.map(team => {
 
-        const matchesPlayed = matches.filter(match => match.firstTeam === team || match.secondTeam === team)
+        const matchesPlayed = matches
+            .filter(match => match.firstTeam === team || match.secondTeam === team)
             .map(match => matchSummary(match));
 
         const wins = matchesPlayed.filter(match => match.winner === team).length;
@@ -90,8 +96,6 @@ export function groupSummary(matches, teams) {
 
         const summary = setsSummary(team, matchesPlayed);
 
-        console.log(draws);
-
         return {
             team: team,
             matchPoints: points,
@@ -99,15 +103,13 @@ export function groupSummary(matches, teams) {
             matchesWon: wins,
             matchesLost: looses,
             matchesDraw: draws,
-            points: summary.points,
             setsWon: summary.setsWon,
             setsLost: summary.setsLost,
             setsRatio: summary.setsRatio,
             pointsWon: summary.pointsWon,
             pointsLost: summary.pointsLost,
             pointsRatio: summary.pointsRatio
-        }
-
+        };
     });
 
 }

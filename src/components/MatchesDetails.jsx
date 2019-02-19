@@ -4,7 +4,7 @@ import React from 'react';
 import {Row} from "react-bootstrap";
 import Col from "react-bootstrap/es/Col";
 import {matchSummary} from "../helpers/matches";
-import {FaEdit, FaWindowClose} from "react-icons/fa/index";
+import {FaTimes} from "react-icons/fa/index";
 
 import '../css/icons.css'
 
@@ -43,8 +43,7 @@ function ResultRow({firstTeam, secondTeam, match, removeMatch}) {
         </Col>
         <Col md={3}>
             <div className={'float-right'}>
-                <FaEdit/>
-                <FaWindowClose style={{color: "#b21f2d"}} onClick={() => removeMatch(match.id)}/>
+                <FaTimes style={{color: "#b21f2d"}} onClick={() => removeMatch(match.id)}/>
             </div>
         </Col>
     </Row>
