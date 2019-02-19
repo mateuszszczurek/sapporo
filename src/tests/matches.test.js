@@ -1,5 +1,5 @@
 import '../helpers/matches.js'
-import {groupSummary} from "../helpers/matches";
+import {groupSummary, resultsSort} from "../helpers/matches";
 
 describe('Matches summary', () => {
 
@@ -155,6 +155,119 @@ describe('Matches summary', () => {
         };
 
         expect(summary[1]).toEqual(jasmine.objectContaining(expected));
+    });
+
+    it('should sort by match points first', () => {
+
+        const teamWithMorePoints = {
+            team : 'A',
+            matchPoints: 4,
+            setsRatio: 1,
+            pointsRatio: 1
+        };
+
+        const teamWithLessPoints = {
+            team : 'B',
+            matchPoints: 2,
+            setsRatio: 3,
+            pointsRatio: 3
+        };
+
+        const firstPermutation = resultsSort([teamWithMorePoints, teamWithLessPoints]);
+
+        expect(firstPermutation[0].team).toBe('A');
+        expect(firstPermutation[1].team).toBe('B');
+
+        const secondPermutation = resultsSort([teamWithMorePoints, teamWithLessPoints]);
+
+        expect(secondPermutation[0].team).toBe('A');
+        expect(secondPermutation[1].team).toBe('B');
+    });
+
+    it('when teams have equal amount of points, sets ratio is taken into account, favoring higher values', () => {
+
+        const teamA = {
+            team : 'A',
+            matchPoints: 4,
+            setsRatio: 1,
+            pointsRatio: 1
+        };
+
+        const teamB = {
+            team : 'B',
+            matchPoints: 4,
+            setsRatio: 3,
+            pointsRatio: 3
+        };
+
+        const firstPermutation = resultsSort([teamA, teamB]);
+
+        expect(firstPermutation[0].team).toBe('B');
+        expect(firstPermutation[1].team).toBe('A');
+
+        const secondPermutation = resultsSort([teamA, teamB]);
+
+        expect(secondPermutation[0].team).toBe('B');
+        expect(secondPermutation[1].team).toBe('A');
+    });
+
+    it('when teams have equal amount of points and sets ratio, small points ratio is taken into account', () => {
+
+        const teamA = {
+            team : 'A',
+            matchPoints: 4,
+            setsRatio: 1,
+            pointsRatio: 0.3
+        };
+
+        const teamB = {
+            team : 'B',
+            matchPoints: 4,
+            setsRatio: 1,
+            pointsRatio: 0.5
+        };
+
+        const firstPermutation = resultsSort([teamA, teamB]);
+
+        expect(firstPermutation[0].team).toBe('B');
+        expect(firstPermutation[1].team).toBe('A');
+
+        const secondPermutation = resultsSort([teamA, teamB]);
+
+        expect(secondPermutation[0].team).toBe('B');
+        expect(secondPermutation[1].team).toBe('A');
+    });
+
+    it('can sort three teams according to rules', () => {
+
+        const teamA = {
+            team : 'A',
+            matchPoints: 10,
+            setsRatio: 1,
+            pointsRatio: 0.3
+        };
+
+        const teamB = {
+            team : 'B',
+            matchPoints: 5,
+            setsRatio: 1,
+            pointsRatio: 0.5
+        };
+
+        const teamC = {
+            team : 'C',
+            matchPoints: 5,
+            setsRatio: 3,
+            pointsRatio: 0.5
+        };
+
+
+        const sortedTeams = resultsSort([teamB, teamC, teamA]);
+
+        expect(sortedTeams[0].team).toBe('A');
+        expect(sortedTeams[1].team).toBe('C');
+        expect(sortedTeams[2].team).toBe('B');
+
     });
 
 

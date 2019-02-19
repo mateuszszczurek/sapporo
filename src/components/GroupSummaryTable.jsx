@@ -5,7 +5,7 @@ import {AgGridReact} from "ag-grid-react";
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-import {groupSummary} from "../helpers/matches";
+import {groupSummary, resultsSort} from "../helpers/matches";
 
 import '../css/agGridStyles.css';
 
@@ -81,26 +81,14 @@ class GroupSummaryTable extends React.Component {
 
         const {matches, teams} = this.props;
 
-        const summary = groupSummary(matches, teams);
-
-        const sorted = summary.sort(function sortSummary(firstTeam, secondTeam) {
-                if (firstTeam.matchPoints > secondTeam.matchPoints) return -1;
-                if (firstTeam.matchPoints < secondTeam.matchPoints) return 1;
-                if (firstTeam.setsRatio > secondTeam.setsRatio) return -1;
-                if (firstTeam.setsRatio < secondTeam.setsRatio) return 1;
-                if (firstTeam.pointsRatio > secondTeam.pointsRatio) return -1;
-                if (firstTeam.pointsRatio < secondTeam.pointsRatio) return 1;
-
-                return 1;
-            }
-        );
+        const summary = resultsSort(groupSummary(matches, teams));
 
         return <div className="ag-theme-balham">
             <div style={{overflow: 'auto'}}>
                 <AgGridReact
                     onGridReady={this.onGridReady}
                     gridOptions={gridOptions}
-                    rowData={sorted}
+                    rowData={summary}
                 />
             </div>
         </div>

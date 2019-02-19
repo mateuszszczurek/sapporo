@@ -111,5 +111,20 @@ export function groupSummary(matches, teams) {
             pointsRatio: summary.pointsRatio
         };
     });
+}
+
+export function resultsSort(summary) {
+
+    return summary.sort(function sortSummary(firstTeam, secondTeam) {
+            if (firstTeam.matchPoints > secondTeam.matchPoints) return -1;
+            if (firstTeam.matchPoints < secondTeam.matchPoints) return 1;
+            if (firstTeam.setsRatio > secondTeam.setsRatio) return -1;
+            if (firstTeam.setsRatio < secondTeam.setsRatio) return 1;
+            if (firstTeam.pointsRatio > secondTeam.pointsRatio) return -1;
+            if (firstTeam.pointsRatio < secondTeam.pointsRatio) return 1;
+
+            return 1;
+        }
+    );
 
 }
