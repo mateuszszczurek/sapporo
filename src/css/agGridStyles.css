@@ -1,3 +1,7 @@
 .ag-header-cell-label .ag-header-icon.ag-sort-order {
     display: none
 }
+
+.cell-wrap-text {
+    white-space: normal !important;
+}

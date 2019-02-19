@@ -13,6 +13,7 @@ class TeamDropdown extends React.Component {
         const {teamSelected, onTeamSelected, allTeams} = this.props;
 
         return <Dropdown
+            drop={'down'}
             onSelect={onTeamSelected}>
             <Dropdown.Toggle
                 className='w-100'>

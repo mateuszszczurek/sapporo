@@ -12,8 +12,6 @@ import '../css/agGridStyles.css';
 const gridOptions = {
     suppressDragLeaveHidesColumns: true,
     suppressMovableColumns: true,
-    enableSorting: true,
-    suppressMenu : true,
     suppressLoadingOverlay: true,
     suppressNoRowsOverlay: true,
     icons : {
@@ -21,9 +19,13 @@ const gridOptions = {
         sortDescending : ' ',
         sortUnSort : ' '
     },
+    defaultColumnDef : {
+        resizable: true,
+    },
     columnDefs: [
-        {headerName: "Drużyna", field: "team", width: 500},
-        {headerName: "Punkty", field: "points", width: 250, unSortIcon: true},
+        {headerName: "Drużyna", field: "team", width: 500,
+            cellClass: 'cell-wrap-text',  autoHeight : true},
+        {headerName: "Punkty", field: "matchPoints", width: 250, unSortIcon: true, sortable : true},
         {
             groupId: 1,
             headerName: "Mecze",
@@ -31,7 +33,8 @@ const gridOptions = {
             children: [
                 {headerName: 'Rozegr.', field: "matchesPlayed"},
                 {headerName: 'Wygr.', field: "matchesWon"},
-                {headerName: 'Przegr.', field: "matchesLost"}
+                {headerName: 'Przegr.', field: "matchesLost"},
+                {headerName: 'Remis', field: "matchesDraw"}
             ]
         },
         {
@@ -42,7 +45,7 @@ const gridOptions = {
             children: [
                 {headerName: 'Wygr.', field: "setsWon"},
                 {headerName: 'Przegr.', field: "setsLost"},
-                {headerName: 'Stos.', field: "setsRatio", valueFormatter: twoDigits}
+                {headerName: 'Stos.', field: "setsRatio", valueFormatter: twoDigits, sortable : true}
             ]
         },
         {
@@ -53,7 +56,7 @@ const gridOptions = {
             children: [
                 {headerName: 'Wygr.', field: "pointsWon"},
                 {headerName: 'Przegr.', field: "pointsLost"},
-                {headerName: 'Stos.', field: "pointsRatio", valueFormatter: twoDigits}
+                {headerName: 'Stos.', field: "pointsRatio", valueFormatter: twoDigits, sortable : true}
             ]
         }
     ]
@@ -92,8 +95,9 @@ class GroupSummaryTable extends React.Component {
         const summary = groupSummary(matches, teams);
 
         return <div className="ag-theme-balham">
-            <div>
-                <AgGridReact onGridReady={this.onGridReady}
+            <div style={{overflow: 'auto'}}>
+                <AgGridReact
+                    onGridReady={this.onGridReady}
                              gridOptions={gridOptions}
                              rowData={summary}
                 />

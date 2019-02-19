@@ -2,14 +2,26 @@ export function matchSummary(match) {
 
     const sets = Object.keys(match.sets).map(key => match.sets[key]);
 
-    const setsExcludingDraws = sets.filter(set => set['first-team'] !== set['second-team']);
-    const winningSets = setsExcludingDraws.filter(set => set['first-team'] > set['second-team']);
+    const winningSetsFirstTeam = sets.filter(set => set['first-team'] > set['second-team']);
+    const winningSetsSecondTeam = sets.filter(set => set['first-team'] < set['second-team']);
 
-    const firstTeamTotalPoints = setsExcludingDraws.map(set => set['first-team']).reduce((a, b) => a + b, 0);
-    const secondTeamTotalPoints = setsExcludingDraws.map(set => set['second-team']).reduce((a, b) => a + b, 0);
+    const firstTeamTotalPoints = sets.map(set => set['first-team']).reduce((a, b) => a + b, 0);
+    const secondTeamTotalPoints = sets.map(set => set['second-team']).reduce((a, b) => a + b, 0);
 
-    const firstTeamSetsWon = winningSets.length;
-    const secondTeamSetsWon = setsExcludingDraws.length - firstTeamSetsWon;
+    const firstTeamSetsWon = winningSetsFirstTeam.length;
+    const secondTeamSetsWon = winningSetsSecondTeam.length;
+
+    function matchResult() {
+        if (firstTeamSetsWon === secondTeamSetsWon) {
+            return {draw: true}
+        } else if (firstTeamSetsWon > secondTeamSetsWon) {
+            return {winner: match.firstTeam, looser: match.secondTeam};
+        } else {
+            return {winner: match.secondTeam, looser: match.firstTeam}
+        }
+    }
+
+    const result = matchResult();
 
     return {
         firstTeamTotalPoints: firstTeamTotalPoints,
@@ -21,9 +33,7 @@ export function matchSummary(match) {
         firstTeamSetsLost: secondTeamSetsWon,
         secondTeamSetsLost: firstTeamSetsWon,
         sets: sets,
-        winner: firstTeamSetsWon > secondTeamSetsWon ? match.firstTeam : match.secondTeam,
-        looser: firstTeamSetsWon < secondTeamSetsWon ? match.firstTeam : match.secondTeam,
-        draw : firstTeamSetsWon === secondTeamSetsWon
+        ...result
     }
 
 }
@@ -36,16 +46,6 @@ function setsSummary(team, matches) {
 
     const eachMatchSummary = matches.map(match => matchSummary(match));
     const sumOfSets = eachMatchSummary.map(it => it.sets.length).reduce((sum, value) => sum + value, 0);
-
-    let wins = function () {
-        return eachMatchSummary.filter(match => match.winner === team).length;
-    };
-
-    let draws = function () {
-        return eachMatchSummary.filter(match => match.draw === true).length;
-    };
-
-    const points = (wins() * 2) + (draws() * 1);
 
     const setsWon = eachMatchSummary.map(it => it.firstTeamName === team ? it.firstTeamSetsWon : it.secondTeamSetsWon);
 
@@ -65,7 +65,6 @@ function setsSummary(team, matches) {
 
     return {
         teamName: team,
-        points : points,
         setsWon: amountOfSetsWon,
         setsLost: setsLost,
         setsRatio: setsRatio,
@@ -78,20 +77,29 @@ function setsSummary(team, matches) {
 
 export function groupSummary(matches, teams) {
 
-    return teams.map(teamName => {
-        const matchesPlayed = matches.filter(match => match.firstTeam === teamName || match.secondTeam === teamName);
+    return teams.map(team => {
 
-        const wonMatches = matches.map(match => matchSummary(match)).filter(summary => summary.winner === teamName);
-        const lostMatches = matches.map(match => matchSummary(match)).filter(summary => summary.looser === teamName);
+        const matchesPlayed = matches.filter(match => match.firstTeam === team || match.secondTeam === team)
+            .map(match => matchSummary(match));
 
-        const summary = setsSummary(teamName, matchesPlayed);
+        const wins = matchesPlayed.filter(match => match.winner === team).length;
+        const looses = matchesPlayed.filter(match => match.looser === team).length;
+        const draws = matchesPlayed.filter(match => match.draw === true).length;
+
+        const points = (wins * 2) + (draws * 1);
+
+        const summary = setsSummary(team, matchesPlayed);
+
+        console.log(draws);
 
         return {
-            team: teamName,
+            team: team,
+            matchPoints: points,
             matchesPlayed: matchesPlayed.length,
-            matchesWon: wonMatches.length,
-            matchesLost: lostMatches.length,
-            points : summary.points,
+            matchesWon: wins,
+            matchesLost: looses,
+            matchesDraw: draws,
+            points: summary.points,
             setsWon: summary.setsWon,
             setsLost: summary.setsLost,
             setsRatio: summary.setsRatio,
