@@ -40,7 +40,10 @@ class TourneyState extends React.Component {
             </Row>
             <Row>
                 <Col md={12} className='mb-3'>
-                    <TourneyDetails group={group} onMatchAdded={this.props.onMatchAdded}/>
+                    <TourneyDetails
+                        group={group}
+                        onMatchAdded={this.props.onMatchAdded}
+                        removeMatch={this.props.removeMatch}/>
                 </Col>
             </Row>
         </div>
@@ -64,7 +67,8 @@ TourneyState.propTypes = {
     tourneyName: PropTypes.string,
     groupChosen: PropTypes.func,
     onMatchAdded: PropTypes.func,
-    saveTourneyState : PropTypes.func
+    saveTourneyState: PropTypes.func,
+    removeMatch : PropTypes.func
 };
 
 TourneyState.defaultProps = {
@@ -72,7 +76,8 @@ TourneyState.defaultProps = {
     tourneyName: "Nazwa turnieju",
     group: {},
     groupChosen: () => {
-    }
+    },
+    removeMatch: () => {}
 };
 
 export default TourneyState;

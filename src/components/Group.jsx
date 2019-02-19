@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import * as React from "react";
 import {Button, Form, FormControl, FormGroup} from "react-bootstrap";
 
-import '../css/button.css';
 import {FaPlus} from "react-icons/fa/index";
 
 class Group extends React.Component {

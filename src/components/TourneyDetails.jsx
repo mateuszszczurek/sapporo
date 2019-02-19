@@ -47,7 +47,8 @@ class TourneyDetails extends React.Component {
                     />
                 </Panel>
                 <Panel header='Mecze'>
-                    <Matches matches={group.matches}/>
+                    <Matches matches={group.matches}
+                             removeMatch={(matchId) => this.props.removeMatch(group.groupLetter, matchId)}/>
                 </Panel>
                 <Panel header='Wprowadź mecz'>
                     <div>
@@ -65,7 +66,8 @@ class TourneyDetails extends React.Component {
 TourneyDetails.propTypes = {
 
     group: PropTypes.object.isRequired,
-    onMatchAdded: PropTypes.func
+    onMatchAdded: PropTypes.func,
+    removeMatch : PropTypes.func
 
 };
 

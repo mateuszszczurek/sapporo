@@ -14,6 +14,8 @@ import Groups from "./components/Groups";
 import TourneyState from "./components/TourneyState";
 import {saveAs} from 'file-saver';
 
+import './css/icons.css'
+
 import uuidv4 from 'uuid/v4';
 
 class App extends React.Component {
@@ -31,6 +33,7 @@ class App extends React.Component {
         this.loadTourneyState = this.loadTourneyState.bind(this);
         this.redirectToGroups = this.redirectToGroups.bind(this);
         this.proceedToState = this.proceedToState.bind(this);
+        this.removeMatch = this.removeMatch.bind(this);
 
         this.state = {
             groups: [
@@ -53,15 +56,31 @@ class App extends React.Component {
         saveAs(blob, fileName)
     }
 
-    onMatchAdded(groupLetter, firstTeam, secondTeam, sets) {
+    removeMatch(groupLetter, matchId) {
+        const group = this.state.groups.find(group => group.groupLetter === groupLetter);
 
-        // TODO refactor it to a match object
-        // TODO think if defined objects help with immutable operations
+        const matches = group.matches.filter(matches => matches.id !== matchId);
+
+        const newGroup = {...group, matches : matches};
+
+        const newGroups = this.state.groups.slice();
+
+        const groupToReplace = newGroups.findIndex(group => group.groupLetter === groupLetter);
+        newGroups[groupToReplace] = newGroup;
+
+        this.setState({groups : newGroups});
+    }
+
+    onMatchAdded(groupLetter, firstTeam, secondTeam, sets) {
 
         const {groups} = this.state;
 
         const groupIndex = groups.findIndex(group => group.groupLetter === groupLetter);
         const group = groups[groupIndex];
+
+        if(!group.teams.includes(firstTeam) || !group.teams.includes(secondTeam)){
+            return;
+        }
 
         const newMatches = group.matches.slice();
         newMatches.push({firstTeam: firstTeam, secondTeam: secondTeam, sets: sets, id: uuidv4()});
@@ -156,6 +175,7 @@ class App extends React.Component {
                             tourneyName={this.state.tourneyName}
                             groupChosen={this.groupChosen}
                             onMatchAdded={this.onMatchAdded}
+                            removeMatch={this.removeMatch}
                         />}
                     />
                     <Route path='/' component={SingleColumnLayout({Content: SelectionPage})}/>

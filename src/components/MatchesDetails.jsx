@@ -4,12 +4,16 @@ import React from 'react';
 import {Row} from "react-bootstrap";
 import Col from "react-bootstrap/es/Col";
 import {matchSummary} from "../helpers/matches";
+import {FaWindowClose} from "react-icons/fa/index";
+
+import '../css/icons.css'
+
 
 class MatchesDetails extends React.Component {
 
     render() {
 
-        const {matches} = this.props;
+        const {matches, removeMatch} = this.props;
 
         return matches.map(match =>
             <ResultRow
@@ -17,25 +21,31 @@ class MatchesDetails extends React.Component {
                 firstTeam={match.firstTeam}
                 secondTeam={match.secondTeam}
                 match={match}
+                removeMatch={removeMatch}
             />
         )
     }
 
 }
 
-function ResultRow({firstTeam, secondTeam, match}) {
+function ResultRow({firstTeam, secondTeam, match, removeMatch}) {
 
     const summary = matchSummary(match);
 
     return <Row>
-        <Col md={6}>
+        <Col md={4}>
             <div className={'text-center'}>{firstTeam} vs {secondTeam}</div>
         </Col>
         <Col md={1}>
             <div className={'text-center'}><b>{summary.firstTeamSetsWon} : {summary.secondTeamSetsWon}</b></div>
         </Col>
-        <Col md={5}>
+        <Col md={4}>
             <div className={'text-center'}>{setDetails(summary.sets)}</div>
+        </Col>
+        <Col md={3}>
+            <div className={'pr-2'}>
+                <FaWindowClose className={'float-right'} style={{color: "#b21f2d"}} onClick={() => removeMatch(match.id)}/>
+            </div>
         </Col>
     </Row>
 
@@ -53,13 +63,16 @@ function setDetails(sets) {
 
 MatchesDetails.propTypes = {
 
-    matches: PropTypes.array
+    matches: PropTypes.array,
+    removeMatch: PropTypes.func
 
 };
 
 MatchesDetails.defaultProps = {
 
-    matches: []
+    matches: [],
+    removeMatch: () => {
+    }
 
 };
 
