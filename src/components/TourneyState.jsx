@@ -6,6 +6,7 @@ import Button from "react-bootstrap/es/Button";
 import Row from "react-bootstrap/es/Row";
 import Col from "react-bootstrap/es/Col";
 import TourneyDetails from "./TourneyDetails";
+import TourneyName from "./TourneyName";
 
 class TourneyState extends React.Component {
 
@@ -16,7 +17,7 @@ class TourneyState extends React.Component {
         return <div>
             <Row>
                 <Col md={{span: 8}}>
-                    <h3 className='pb-3'>Turniej "{tourneyName}"</h3>
+                    <TourneyName tourneyName={tourneyName}/>
                 </Col>
             </Row>
             <Row>

@@ -4,10 +4,9 @@ import React from 'react';
 import {Row} from "react-bootstrap";
 import Col from "react-bootstrap/es/Col";
 import {matchSummary} from "../helpers/matches";
-import {FaWindowClose} from "react-icons/fa/index";
+import {FaEdit, FaWindowClose} from "react-icons/fa/index";
 
 import '../css/icons.css'
-
 
 class MatchesDetails extends React.Component {
 
@@ -43,8 +42,9 @@ function ResultRow({firstTeam, secondTeam, match, removeMatch}) {
             <div className={'text-center'}>{setDetails(summary.sets)}</div>
         </Col>
         <Col md={3}>
-            <div className={'pr-2'}>
-                <FaWindowClose className={'float-right'} style={{color: "#b21f2d"}} onClick={() => removeMatch(match.id)}/>
+            <div className={'float-right'}>
+                <FaEdit/>
+                <FaWindowClose style={{color: "#b21f2d"}} onClick={() => removeMatch(match.id)}/>
             </div>
         </Col>
     </Row>

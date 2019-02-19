@@ -6,6 +6,7 @@ import Logo from "./Logo";
 import Group from "./Group";
 import Button from "react-bootstrap/es/Button";
 import {FaPlus} from "react-icons/fa/index";
+import TourneyName from "./TourneyName";
 
 // TODO extract this css (is copied from other file)
 // TODO bigger space between plus and text
@@ -47,7 +48,7 @@ class Groups extends React.Component {
             </Row>
             <Row>
                 <Col md={{span: 8}}>
-                    <h3 className='pb-3'>Turniej "{tourneyName}"</h3>
+                   <TourneyName tourneyName={tourneyName}/>
                 </Col>
             </Row>
             <Row>
