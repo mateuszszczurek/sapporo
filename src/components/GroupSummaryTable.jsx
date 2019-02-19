@@ -39,7 +39,6 @@ const gridOptions = {
             children: [
                 {headerName: 'Wygr.', field: "setsWon"},
                 {headerName: 'Przegr.', field: "setsLost"},
-                {headerName: 'Remis.', field: "setsDraw"},
                 {headerName: 'Stos.', field: "setsRatio", valueFormatter: twoDigits}
             ]
         },
