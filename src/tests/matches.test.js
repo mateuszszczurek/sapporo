@@ -238,6 +238,51 @@ describe('Matches summary', () => {
         expect(secondPermutation[1].team).toBe('A');
     });
 
+    it('when sets ratio is undefined and taken into account, it should have higher value', () => {
+
+        const teamA = {
+            team : 'A',
+            matchPoints: 4,
+            setsRatio: null,
+            pointsRatio: 0.3
+        };
+
+        const teamB = {
+            team : 'B',
+            matchPoints: 4,
+            setsRatio: 100,
+            pointsRatio: 0.5
+        };
+
+        const results = resultsSort([teamB, teamA]);
+
+        expect(results[0].team).toBe('A');
+        expect(results[1].team).toBe('B');
+    });
+
+    it('when sets ratio is undefined for both teams and taken into account, we should still take points ratio into account', () => {
+
+        const teamA = {
+            team : 'A',
+            matchPoints: 4,
+            setsRatio: null,
+            pointsRatio: 0.3
+        };
+
+        const teamB = {
+            team : 'B',
+            matchPoints: 4,
+            setsRatio: null,
+            pointsRatio: 0.5
+        };
+
+        const results = resultsSort([teamA, teamB]);
+
+        expect(results[0].team).toBe('B');
+        expect(results[1].team).toBe('A');
+    });
+
+
     it('can sort three teams according to rules', () => {
 
         const teamA = {

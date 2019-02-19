@@ -16,10 +16,10 @@ const gridOptions = {
     suppressNoRowsOverlay: true,
     columnDefs: [
         {
-            headerName: "Drużyna", field: "team", width: 500,
+            headerName: "Drużyna", field: "team", width: 350,
             cellClass: 'cell-wrap-text', autoHeight: true
         },
-        {headerName: "Punkty", field: "matchPoints", width: 250, unSortIcon: true},
+        {headerName: "Punkty", field: "matchPoints", width: 200},
         {
             groupId: 1,
             headerName: "Mecze",

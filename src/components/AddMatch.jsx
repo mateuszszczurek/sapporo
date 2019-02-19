@@ -138,8 +138,8 @@ class AddMatch extends React.Component {
                      firstTeam={'first-team'}
                      secondTeam={'second-team'}
                      creationAttempted={this.state.creationAttempted}
-                     firstTeamResult={this.state.sets[setNumber] ? this.state.sets[setNumber]['first-team'] : ''}
-                     secondTeamResult={this.state.sets[setNumber] ? this.state.sets[setNumber]['second-team'] : ''}
+                     firstTeamResult={this.state.sets[setNumber] ? this.state.sets[setNumber]['first-team'] : null}
+                     secondTeamResult={this.state.sets[setNumber] ? this.state.sets[setNumber]['second-team'] : null}
                      onSetChange={this.onSetChanged}/>
             )}
             <Row className={'mt-3'}>

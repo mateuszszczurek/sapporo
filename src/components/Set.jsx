@@ -85,16 +85,16 @@ Set.propTypes = {
     firstTeam: PropTypes.string,
     secondTeam: PropTypes.string,
     setNumber: PropTypes.number,
-    firstTeamResult: PropTypes.string,
-    secondTeamResult: PropTypes.string,
+    firstTeamResult: PropTypes.number,
+    secondTeamResult: PropTypes.number,
     onSetChange: PropTypes.func
 
 };
 
 Set.defaultProps = {
 
-    firstTeamResult : '',
-    secondTeamResult : ''
+    firstTeamResult : null,
+    secondTeamResult : null
 
 };
 
