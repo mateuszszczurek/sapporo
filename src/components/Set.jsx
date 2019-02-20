@@ -3,15 +3,16 @@ import PropTypes from 'prop-types';
 import {Col} from "react-bootstrap";
 import Form from "react-bootstrap/es/Form";
 import React from "react";
+import Row from "react-bootstrap/es/Row";
 
 function MissingPoints() {
-    return <Form.Control.Feedback type="invalid">
+    return <Form.Control.Feedback type='invalid'>
         Wprowadź liczbę punktów
     </Form.Control.Feedback>;
 }
 
 function CannotHaveDraw() {
-    return <Form.Control.Feedback type="invalid">
+    return <Form.Control.Feedback type='invalid'>
         Remis niedozwolony
     </Form.Control.Feedback>;
 }
@@ -34,14 +35,18 @@ class Set extends React.Component {
 
     render() {
 
-        const {validationResults, setNumber, firstTeamResult, secondTeamResult, onSetChange} = this.props;
+        const {
+            creationAttempted, validationResult,
+            setNumber, firstTeamResult,
+            secondTeamResult, onSetChange
+        } = this.props;
 
-        const firstTeamMissingPoints = validationResults === 'firstTeamResultMissing';
-        const secondTeamMissingPoints = validationResults === 'secondTeamResultMissing';
-
-        return <div>
+        const firstTeamMissingPoints = creationAttempted && (validationResult === 'firstTeamResultMissing');
+        const secondTeamMissingPoints = creationAttempted && (validationResult === 'secondTeamResultMissing');
+        const hasDraw = creationAttempted && (validationResult === 'isADraw');
+        return <div className=''>
             <Form>
-                <Form.Row key={setNumber} className='mb-1'>
+                <Form.Row key={setNumber}>
                     <Form.Group as={Col} md={1}>
                         <h4 key={setNumber}>{setNumber} set</h4>
                     </Form.Group>
@@ -50,9 +55,10 @@ class Set extends React.Component {
                                       type='text'
                                       value={zeroOrNumberOrEmpty(firstTeamResult)}
                                       onChange={e => allowEmptyOrNumber(e, onSetChange(setNumber, 'first-team'))}
-                                      isValid={!firstTeamMissingPoints}
+                                      isInvalid={firstTeamMissingPoints || hasDraw}
                         />
                         {firstTeamMissingPoints && <MissingPoints/>}
+                        {hasDraw && <CannotHaveDraw/>}
                     </Form.Group>
                     <Form.Group as={Col}
                                 md={{span: 2, offset: 1}}>
@@ -63,12 +69,16 @@ class Set extends React.Component {
                                       type='text'
                                       value={zeroOrNumberOrEmpty(secondTeamResult)}
                                       onChange={e => allowEmptyOrNumber(e, onSetChange(setNumber, 'second-team'))}
-                                      isValid={!secondTeamMissingPoints}
+                                      isInvalid={secondTeamMissingPoints || hasDraw}
+
                         />
                         {secondTeamMissingPoints && <MissingPoints/>}
                     </Form.Group>
                 </Form.Row>
+
+
             </Form>
+
         </div>
 
     }
@@ -89,21 +99,22 @@ function zeroOrNumberOrEmpty(firstTeamResult) {
 
 Set.propTypes = {
 
-    creationAttempted : PropTypes.bool,
     firstTeam: PropTypes.string,
     secondTeam: PropTypes.string,
     setNumber: PropTypes.number,
     firstTeamResult: PropTypes.number,
     secondTeamResult: PropTypes.number,
     onSetChange: PropTypes.func,
-    validationResults : PropTypes.string
+    validationResult: PropTypes.string,
+    creationAttempted: PropTypes.bool
 
 };
 
 Set.defaultProps = {
 
-    firstTeamResult : null,
-    secondTeamResult : null
+    firstTeamResult: null,
+    secondTeamResult: null,
+    creationAttempted: false
 
 };
 

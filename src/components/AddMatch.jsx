@@ -48,7 +48,6 @@ class AddMatch extends React.Component {
     }
 
     onMatchAdded() {
-        console.log(this.state);
         if (this.state.teamsSelection.length < 2) {
             alert('Proszę wybrać obie drużyny');
             // todo consider disabling button if two teams are not chosen
@@ -61,7 +60,7 @@ class AddMatch extends React.Component {
         const validationResults = validateSets(this.state.sets);
 
         if (Object.keys(validationResults).length > 0) {
-            this.setState({validationResults: validationResults});
+            this.setState({validationResults: validationResults, creationAttempted: true});
             return;
         }
 
@@ -143,7 +142,7 @@ class AddMatch extends React.Component {
                      firstTeamResult={this.state.sets[setNumber] ? this.state.sets[setNumber]['first-team'] : null}
                      secondTeamResult={this.state.sets[setNumber] ? this.state.sets[setNumber]['second-team'] : null}
                      onSetChange={this.onSetChanged}
-                     validationResults={this.state.validationResults[setNumber]}/>
+                     validationResult={this.state.validationResults[setNumber]}/>
             )}
             <Row className={'mt-3'}>
                 <Col>
