@@ -95,15 +95,17 @@ class AddMatch extends React.Component {
             const alreadySelectedIndex = this.state.teamsSelection.findIndex(it => it.selectedTeam === selectedTeam);
             if (alreadySelectedIndex !== -1) {
 
-                const alreadySelected = this.state.teamsSelection[alreadySelectedIndex];
                 const toBeChanged = this.state.teamsSelection.find(it => it.selectionId === selectionId);
+
+                if(!toBeChanged) return;
+
+                const alreadySelected = this.state.teamsSelection[alreadySelectedIndex];
 
                 const newSelection = [
                     {selectionId: selectionId, selectedTeam: selectedTeam},
+                    {selectionId: alreadySelected.selectionId, selectedTeam: toBeChanged.selectedTeam}
                 ];
 
-                if(toBeChanged) newSelection.push({selectionId: alreadySelected.selectionId, selectedTeam: toBeChanged.selectedTeam});
-                
                 this.setState({teamsSelection: newSelection, selectionProblems : {}});
             } else {
                 const newSelection = {selectionId: selectionId, selectedTeam: selectedTeam};
@@ -137,25 +139,25 @@ class AddMatch extends React.Component {
 
         return <Form>
             <Form.Row>
-                <Col md={{span: 4, offset: 1}}>
+                <Form.Group as={Col} md={{span: 4, offset: 1}}>
                     <TeamDropdownSelect
                         allTeams={group.teams}
                         problem={this.state.selectionProblems['first-team']}
                         teamSelected={this.teamSelectionFor('first-team')}
                         onTeamSelected={this.onTeamSelected('first-team')}
                     />
-                </Col>
+                </Form.Group>
                 <Col md={2}>
                     <h3 className='text-center'>vs</h3>
                 </Col>
-                <Col md={4}>
+                <Form.Group as={Col} md={4}>
                     <TeamDropdownSelect
                         allTeams={group.teams}
                         problem={this.state.selectionProblems['second-team']}
                         teamSelected={this.teamSelectionFor('second-team')}
                         onTeamSelected={this.onTeamSelected('second-team')}
                     />
-                </Col>
+                </Form.Group>
             </Form.Row>
             {Array.from(new Array(5), (val, index) => index + 1).map(setNumber =>
                 <Set key={setNumber}
