@@ -34,7 +34,10 @@ class Set extends React.Component {
 
     render() {
 
-        const {setNumber, firstTeamResult, secondTeamResult, onSetChange} = this.props;
+        const {validationResults, setNumber, firstTeamResult, secondTeamResult, onSetChange} = this.props;
+
+        const firstTeamMissingPoints = validationResults === 'firstTeamResultMissing';
+        const secondTeamMissingPoints = validationResults === 'secondTeamResultMissing';
 
         return <div>
             <Form>
@@ -47,17 +50,22 @@ class Set extends React.Component {
                                       type='text'
                                       value={zeroOrNumberOrEmpty(firstTeamResult)}
                                       onChange={e => allowEmptyOrNumber(e, onSetChange(setNumber, 'first-team'))}
+                                      isValid={!firstTeamMissingPoints}
                         />
-                        {this.props.creationAttempted && !firstTeamResult && <MissingPoints/>}
+                        {firstTeamMissingPoints && <MissingPoints/>}
                     </Form.Group>
                     <Form.Group as={Col}
                                 md={{span: 2, offset: 1}}>
                         <h5 className='text-center'>:</h5>
                     </Form.Group>
                     <Form.Group as={Col} md={{span: 2, offset: 1}}>
-                        <Form.Control as='input' type='text' value={zeroOrNumberOrEmpty(secondTeamResult)}
-                                      onChange={e => allowEmptyOrNumber(e, onSetChange(setNumber, 'second-team'))}/>
-                        {this.props.creationAttempted && !secondTeamResult && <MissingPoints/>}
+                        <Form.Control as='input'
+                                      type='text'
+                                      value={zeroOrNumberOrEmpty(secondTeamResult)}
+                                      onChange={e => allowEmptyOrNumber(e, onSetChange(setNumber, 'second-team'))}
+                                      isValid={!secondTeamMissingPoints}
+                        />
+                        {secondTeamMissingPoints && <MissingPoints/>}
                     </Form.Group>
                 </Form.Row>
             </Form>
@@ -87,7 +95,8 @@ Set.propTypes = {
     setNumber: PropTypes.number,
     firstTeamResult: PropTypes.number,
     secondTeamResult: PropTypes.number,
-    onSetChange: PropTypes.func
+    onSetChange: PropTypes.func,
+    validationResults : PropTypes.string
 
 };
 

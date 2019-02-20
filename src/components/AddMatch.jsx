@@ -9,6 +9,7 @@ import {Col} from "react-bootstrap";
 import Button from "react-bootstrap/es/Button";
 import TeamDropdown from "./TeamDropdown";
 import Set from "./Set";
+import {validateSets} from "../helpers/validate";
 
 class AddMatch extends React.Component {
 
@@ -23,7 +24,7 @@ class AddMatch extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {teamsSelection: [], sets: {}};
+        this.state = {teamsSelection: [], sets: {}, validationResults: {}};
 
         this.firstTeamSelected = this.firstTeamSelected.bind(this);
         this.secondTeamSelected = this.secondTeamSelected.bind(this);
@@ -47,19 +48,20 @@ class AddMatch extends React.Component {
     }
 
     onMatchAdded() {
+        console.log(this.state);
         if (this.state.teamsSelection.length < 2) {
             alert('Proszę wybrać obie drużyny');
-            // consider disabling button if two teams are not chosen
+            // todo consider disabling button if two teams are not chosen
             // todo - check if at least on set populated
             // todo - check if we don't have unfilled sets
             // todo - check if we have draws
             return;
         }
 
-        const setsValidation = Object.keys(this.state.sets).map(key => validateSet(key, this.state.sets[key]));
+        const validationResults = validateSets(this.state.sets);
 
-        if (setsValidation.filter(it => it.validation) > 0) {
-            this.setState({validationResults: setsValidation, creationAttempted: true});
+        if (Object.keys(validationResults).length > 0) {
+            this.setState({validationResults: validationResults});
             return;
         }
 
@@ -140,7 +142,8 @@ class AddMatch extends React.Component {
                      creationAttempted={this.state.creationAttempted}
                      firstTeamResult={this.state.sets[setNumber] ? this.state.sets[setNumber]['first-team'] : null}
                      secondTeamResult={this.state.sets[setNumber] ? this.state.sets[setNumber]['second-team'] : null}
-                     onSetChange={this.onSetChanged}/>
+                     onSetChange={this.onSetChanged}
+                     validationResults={this.state.validationResults[setNumber]}/>
             )}
             <Row className={'mt-3'}>
                 <Col>
@@ -153,44 +156,6 @@ class AddMatch extends React.Component {
             </Row>
         </div>
     }
-
-}
-
-function validateSet(setNumber, setResults) {
-    const firstResult = setResults['first-team'];
-    const secondResult = setResults['second-team'];
-
-    const validationResults = {setNumber: setNumber};
-
-    if (firstResult === 0) {
-        validationResults.firstResultsMissing = true;
-        validationResults.hasValidationResults = true;
-    }
-
-    if (secondResult === 0) {
-        validationResults.secondResultMissing = true;
-        validationResults.hasValidationResults = true;
-    }
-
-    if (!firstResult && !secondResult) {
-        validationResults.hasValidationResults = false;
-        return validationResults;
-    }
-
-    if (firstResult === secondResult) {
-        validationResults.isDraw = true;
-        validationResults.hasValidationResults = true;
-    }
-
-    if (!firstResult) {
-        validationResults.firstResultsMissing = true;
-    }
-
-    if(!secondResult) {
-        validationResults.secondResultMissing = true;
-    }
-
-    return validationResults;
 
 }
 
