@@ -52,10 +52,10 @@ class TourneyState extends React.Component {
 }
 
 function GroupItems({activeGroup, groups}) {
-    return groups.map(it =>
-        <Nav.Link eventKey={it.groupLetter}
-                  key={it.groupLetter}
-                  active={it.groupLetter === activeGroup}
+    return groups.map(it => <Nav.Link eventKey={it.groupLetter}
+                                      className={it.groupLetter === activeGroup && 'border border-white rounded'}
+                                      key={it.groupLetter}
+                                      active={it.groupLetter === activeGroup}
         >
             Grupa {it.groupLetter}
         </Nav.Link>
@@ -69,7 +69,7 @@ TourneyState.propTypes = {
     groupChosen: PropTypes.func,
     onMatchAdded: PropTypes.func,
     saveTourneyState: PropTypes.func,
-    removeMatch : PropTypes.func
+    removeMatch: PropTypes.func
 };
 
 TourneyState.defaultProps = {
@@ -78,7 +78,8 @@ TourneyState.defaultProps = {
     group: {},
     groupChosen: () => {
     },
-    removeMatch: () => {}
+    removeMatch: () => {
+    }
 };
 
 export default TourneyState;

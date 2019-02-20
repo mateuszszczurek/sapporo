@@ -94,24 +94,27 @@ class AddMatch extends React.Component {
         return selectedTeam => {
             const alreadySelectedIndex = this.state.teamsSelection.findIndex(it => it.selectedTeam === selectedTeam);
             if (alreadySelectedIndex !== -1) {
-                // TODO - exchange on non found yet
+
                 const alreadySelected = this.state.teamsSelection[alreadySelectedIndex];
                 const toBeChanged = this.state.teamsSelection.find(it => it.selectionId === selectionId);
 
                 const newSelection = [
                     {selectionId: selectionId, selectedTeam: selectedTeam},
-                    {selectionId: alreadySelected.selectionId, selectedTeam: toBeChanged.selectedTeam}
                 ];
 
-
-                this.setState({teamsSelection: newSelection});
+                if(toBeChanged) newSelection.push({selectionId: alreadySelected.selectionId, selectedTeam: toBeChanged.selectedTeam});
+                
+                this.setState({teamsSelection: newSelection, selectionProblems : {}});
             } else {
                 const newSelection = {selectionId: selectionId, selectedTeam: selectedTeam};
 
                 const newSelections = this.state.teamsSelection.filter(it => it.selectionId !== selectionId);
                 newSelections.push(newSelection);
 
-                this.setState({teamsSelection: newSelections});
+                const selectionProblems = {...this.state.selectionProblems};
+                selectionProblems[selectionId] = null;
+
+                this.setState({teamsSelection: newSelections, selectionProblems : selectionProblems});
             }
         }
     }
