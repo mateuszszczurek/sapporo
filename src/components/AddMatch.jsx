@@ -7,9 +7,10 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import Row from "react-bootstrap/es/Row";
 import {Col} from "react-bootstrap";
 import Button from "react-bootstrap/es/Button";
-import TeamDropdown from "./TeamDropdown";
 import Set from "./Set";
 import {validateSets} from "../helpers/validate";
+import Form from "react-bootstrap/es/Form";
+import TeamDropdownSelect from "./TeamDropdownSelect";
 
 class AddMatch extends React.Component {
 
@@ -24,7 +25,7 @@ class AddMatch extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {teamsSelection: [], sets: {}, validationResults: {}};
+        this.state = {teamsSelection: [], sets: {}, validationResults: {}, selectionProblems: {}};
 
         this.firstTeamSelected = this.firstTeamSelected.bind(this);
         this.secondTeamSelected = this.secondTeamSelected.bind(this);
@@ -49,11 +50,19 @@ class AddMatch extends React.Component {
 
     onMatchAdded() {
         if (this.state.teamsSelection.length < 2) {
-            alert('Proszę wybrać obie drużyny');
-            // todo consider disabling button if two teams are not chosen
-            // todo - check if at least on set populated
+            const selection = this.state.teamsSelection.find(it => it.selectionId === 'first-team');
+
+            const selectionProblems = {...this.state.selectionProblems};
+            if (!selection) {
+                selectionProblems['first-team'] = {notSelected: true};
+            }
+            const secondSelection = this.state.teamsSelection.find(it => it.selectionId === 'second-team');
+            if (!secondSelection) {
+                selectionProblems['second-team'] = {notSelected: true};
+            }
             // todo - check if we don't have unfilled sets
             // todo - check if we have draws
+            this.setState({selectionProblems: selectionProblems});
             return;
         }
 
@@ -67,9 +76,7 @@ class AddMatch extends React.Component {
         const firstTeam = this.state.teamsSelection[0].selectedTeam;
         const secondTeam = this.state.teamsSelection[1].selectedTeam;
 
-        // TODO shouldn't be able to add match without any sets!
         // TODO flush state from set - make selection - unselected
-        // TODO Make it possible to edit match or forbid to choose already chosen match
         this.props.onMatchAdded(firstTeam, secondTeam, this.state.sets);
         this.setState({sets: [], teamsSelection: [], creationAttempted: false})
     }
@@ -85,15 +92,32 @@ class AddMatch extends React.Component {
 
     onTeamSelected(selectionId) {
         return selectedTeam => {
-            if (this.state.teamsSelection.findIndex(it => it.selectedTeam === selectedTeam) !== -1) {
-                return;
+            const alreadySelectedIndex = this.state.teamsSelection.findIndex(it => it.selectedTeam === selectedTeam);
+            if (alreadySelectedIndex !== -1) {
+
+                const toBeChanged = this.state.teamsSelection.find(it => it.selectionId === selectionId);
+
+                if(!toBeChanged) return;
+
+                const alreadySelected = this.state.teamsSelection[alreadySelectedIndex];
+
+                const newSelection = [
+                    {selectionId: selectionId, selectedTeam: selectedTeam},
+                    {selectionId: alreadySelected.selectionId, selectedTeam: toBeChanged.selectedTeam}
+                ];
+
+                this.setState({teamsSelection: newSelection, selectionProblems : {}});
+            } else {
+                const newSelection = {selectionId: selectionId, selectedTeam: selectedTeam};
+
+                const newSelections = this.state.teamsSelection.filter(it => it.selectionId !== selectionId);
+                newSelections.push(newSelection);
+
+                const selectionProblems = {...this.state.selectionProblems};
+                selectionProblems[selectionId] = null;
+
+                this.setState({teamsSelection: newSelections, selectionProblems : selectionProblems});
             }
-            const newSelection = {selectionId: selectionId, selectedTeam: selectedTeam};
-
-            const newSelections = this.state.teamsSelection.filter(it => it.selectionId !== selectionId);
-            newSelections.push(newSelection);
-
-            this.setState({teamsSelection: newSelections});
         }
     }
 
@@ -113,26 +137,28 @@ class AddMatch extends React.Component {
 
         const {group} = this.props;
 
-        return <div>
-            <Row className={'mb-2'}>
-                <Col md={{span: 4, offset: 1}}>
-                    <TeamDropdown
+        return <Form>
+            <Form.Row>
+                <Form.Group as={Col} md={{span: 4, offset: 1}}>
+                    <TeamDropdownSelect
                         allTeams={group.teams}
+                        problem={this.state.selectionProblems['first-team']}
                         teamSelected={this.teamSelectionFor('first-team')}
                         onTeamSelected={this.onTeamSelected('first-team')}
                     />
-                </Col>
+                </Form.Group>
                 <Col md={2}>
                     <h3 className='text-center'>vs</h3>
                 </Col>
-                <Col md={4}>
-                    <TeamDropdown
+                <Form.Group as={Col} md={4}>
+                    <TeamDropdownSelect
                         allTeams={group.teams}
+                        problem={this.state.selectionProblems['second-team']}
                         teamSelected={this.teamSelectionFor('second-team')}
                         onTeamSelected={this.onTeamSelected('second-team')}
                     />
-                </Col>
-            </Row>
+                </Form.Group>
+            </Form.Row>
             {Array.from(new Array(5), (val, index) => index + 1).map(setNumber =>
                 <Set key={setNumber}
                      setNumber={setNumber}
@@ -147,13 +173,16 @@ class AddMatch extends React.Component {
             <Row className={'mt-3'}>
                 <Col>
                     <Button
-                        onClick={this.onMatchAdded}
+                        onClick={e => {
+                            e.preventDefault();
+                            this.onMatchAdded()
+                        }}
                         className='float-right'
                         type="submit">Zatwierdź mecz
                     </Button>
                 </Col>
             </Row>
-        </div>
+        </Form>
     }
 
 }

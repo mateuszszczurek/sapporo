@@ -62,7 +62,7 @@ class Group extends React.Component {
         const {groupLetter, teams, teamAdded} = this.props;
 
         return <div>
-            <h2>{groupLetter}</h2>
+            <h2>Grupa {groupLetter}</h2>
             <Form>
                 <FormGroup>
                     {groupItems(teams, groupLetter)}

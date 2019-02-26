@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {Col} from "react-bootstrap";
 import Form from "react-bootstrap/es/Form";
 import React from "react";
-import Row from "react-bootstrap/es/Row";
 
 function MissingPoints() {
     return <Form.Control.Feedback type='invalid'>
@@ -44,9 +43,7 @@ class Set extends React.Component {
         const firstTeamMissingPoints = creationAttempted && (validationResult === 'firstTeamResultMissing');
         const secondTeamMissingPoints = creationAttempted && (validationResult === 'secondTeamResultMissing');
         const hasDraw = creationAttempted && (validationResult === 'isADraw');
-        return <div className=''>
-            <Form>
-                <Form.Row key={setNumber}>
+        return <Form.Row key={setNumber}>
                     <Form.Group as={Col} md={1}>
                         <h4 key={setNumber}>{setNumber} set</h4>
                     </Form.Group>
@@ -74,13 +71,7 @@ class Set extends React.Component {
                         />
                         {secondTeamMissingPoints && <MissingPoints/>}
                     </Form.Group>
-                </Form.Row>
-
-
-            </Form>
-
-        </div>
-
+        </Form.Row>
     }
 
 }

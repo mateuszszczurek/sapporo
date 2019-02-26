@@ -1,5 +1,5 @@
 {
-  "name": "sapporo",
+  "name": "Sapporo",
   "homepage": "https://mateuszszczurek.github.io/sapporo",
   "version": "0.1.0",
   "private": true,
@@ -7,6 +7,7 @@
     "ag-grid-community": "^20.0.0",
     "ag-grid-react": "^20.0.0",
     "bootstrap": "^4.2.1",
+    "dotenv-expand": "^4.2.0",
     "file-saver": "^2.0.1",
     "gh-pages": "^2.0.1",
     "history": "^4.7.2",
